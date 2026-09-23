@@ -1,0 +1,14 @@
+{
+  "name": "Calculatrice",
+  "short_name": "Calculatrice",
+  "start_url": "../",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon-ios.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
