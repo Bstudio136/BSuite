@@ -1561,6 +1561,8 @@
         section { display: flex; flex-direction: column; gap: 3px; }
         section h3 { margin: 0; font-size: 0.9rem; color: var(--accent-gold); }
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        /* AJOUT : Assure que la confirmation s'affiche par-dessus tout */
+        #custom-modal { z-index: 300; }
         .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         .modal-card h3 { margin: 0 0 4px 0; font-size: 1rem; color: var(--accent-gold); }
         .password-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; position: relative; }
@@ -1945,19 +1947,26 @@
         const folderModal = document.getElementById('folder-modal');
         const modalFolderTitle = document.getElementById('modal-folder-title');
         document.getElementById('btn-folder-close').addEventListener('click', () => folderModal.classList.add('hidden'));
+        
+        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-up').addEventListener('click', async () => {
+            folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
             const idx = list.indexOf(selectedFolderForAction);
             if (idx > 0) { const temp = list[idx - 1]; list[idx - 1] = list[idx]; list[idx] = temp; if (modalContext === 'public') { await saveData(); renderFoldersMenu(); } else { await savePrivateData(); renderPrivateFoldersMenu(); } }
-            folderModal.classList.add('hidden');
         });
+        
+        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-down').addEventListener('click', async () => {
+            folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
             const idx = list.indexOf(selectedFolderForAction);
             if (idx !== -1 && idx < list.length - 1) { const temp = list[idx + 1]; list[idx + 1] = list[idx]; list[idx] = temp; if (modalContext === 'public') { await saveData(); renderFoldersMenu(); } else { await savePrivateData(); renderPrivateFoldersMenu(); } }
-            folderModal.classList.add('hidden');
         });
+        
+        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-rename').addEventListener('click', async () => {
+            folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
             const notesArr = (modalContext === 'public') ? notes : privateNotes;
             const newName = await customPrompt('Nouveau nom pour "' + selectedFolderForAction + '" :', selectedFolderForAction, "Renommer le dossier");
@@ -1971,12 +1980,14 @@
                     else { if (activePrivateFolder === oldName) activePrivateFolder = trimmed; await savePrivateData(); renderPrivateFoldersMenu(); renderPrivateGrid(); }
                 } else { await customAlert("Ce nom de dossier existe déjà."); }
             }
-            folderModal.classList.add('hidden');
         });
+        
+        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-delete').addEventListener('click', async () => {
+            folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
             const notesArr = (modalContext === 'public') ? notes : privateNotes;
-            if (list.length <= 1) { await customAlert("Vous devez conserver au moins un dossier."); folderModal.classList.add('hidden'); return; }
+            if (list.length <= 1) { await customAlert("Vous devez conserver au moins un dossier."); return; }
             const confirmDel = await customConfirm('Voulez-vous vraiment supprimer le dossier "' + selectedFolderForAction + '" ? Ses notes seront déplacées.', "Supprimer un dossier");
             if (confirmDel) {
                 const targetFolder = list[0] === selectedFolderForAction ? list[1] : list[0];
@@ -1984,7 +1995,6 @@
                 if (modalContext === 'public') { folders = folders.filter(f => f !== selectedFolderForAction); if (activeFolder === selectedFolderForAction) activeFolder = 'all'; await saveData(); renderFoldersMenu(); renderGrid(); }
                 else { privateFolders = privateFolders.filter(f => f !== selectedFolderForAction); if (activePrivateFolder === selectedFolderForAction) activePrivateFolder = 'all'; await savePrivateData(); renderPrivateFoldersMenu(); renderPrivateGrid(); }
             }
-            folderModal.classList.add('hidden');
         });
         let notes = [], folders = ['Général', 'Personnel', 'Travail'];
         let activeFolder = 'all', activeNoteId = null, isListView = false, draggedNoteId = null;
