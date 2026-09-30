@@ -140,7 +140,6 @@
         .calc-btn {
             background: #333; color: #fff; border: none; border-radius: 50%;
             width: 100%; aspect-ratio: 1 / 1; 
-            /* Taille de police augmentée */
             font-size: clamp(1.8rem, 8vw, 2.6rem);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: background 0.1s; user-select: none; -webkit-tap-highlight-color: transparent;
@@ -153,7 +152,6 @@
         .calc-btn.clear { background: #a5a5a5; color: #000; font-weight: 500; }
         .calc-btn.clear:active { background: #d4d4d4; }
         
-        /* Bouton zéro modifié (style pilule, aligné à gauche) */
         .calc-btn.zero {
             grid-column: span 2;
             border-radius: 40px;
@@ -388,6 +386,111 @@
         .app-card[data-app="bstegano"] { border-color: rgba(168, 85, 247, 0.4); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2), inset 0 0 20px rgba(168, 85, 247, 0.05); }
         .app-card[data-app="bstegano"] .app-icon { background: rgba(168, 85, 247, 0.15); border-color: var(--violet); color: var(--violet); box-shadow: 0 0 12px rgba(168, 85, 247, 0.4); }
 
+        /* --- Bouton Info sur les cartes --- */
+        .info-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(168, 85, 247, 0.15);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            color: var(--violet);
+            font-size: 0.7rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 0;
+            line-height: 1;
+        }
+        .info-btn:hover, .info-btn:active {
+            background: var(--violet);
+            color: #fff;
+            box-shadow: 0 0 12px var(--violet);
+            transform: scale(1.15);
+        }
+
+        /* --- Modal explicatif --- */
+        .info-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(3, 5, 10, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .info-modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        .info-modal-box {
+            background: var(--card-bg);
+            border: 1px solid var(--violet);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.25), inset 0 0 20px rgba(168, 85, 247, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 420px;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            clip-path: polygon(0 0, calc(100% - 15px) 0, 100% 15px, 100% 100%, 15px 100%, 0 calc(100% - 15px));
+        }
+        @keyframes modalPop {
+            from { transform: scale(0.9) translateY(20px); opacity: 0; }
+            to { transform: scale(1) translateY(0); opacity: 1; }
+        }
+        .info-modal-box h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--cyan);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .info-modal-box p {
+            font-size: 0.82rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin: 0;
+        }
+        .info-modal-box .modal-btn {
+            align-self: flex-end;
+            background: rgba(0, 240, 255, 0.05);
+            color: var(--cyan);
+            border: 1px solid var(--cyan);
+            padding: 8px 16px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+        .info-modal-box .modal-btn:hover {
+            background: var(--grad-primary);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+        }
+
         /* ===== APP CONTAINER ===== */
         .app-container { display: none; width: 100%; height: 100%; position: fixed; inset: 0; background: var(--bg); z-index: 500; }
         .app-container.active { display: block; }
@@ -565,19 +668,32 @@
         </div>
         <div class="apps-grid">
             <div class="app-card" data-app="bauth" onclick="loadApp('bauth')">
+                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bauth')" aria-label="Informations">ℹ</button>
                 <div class="app-icon">🔐</div><div class="app-name">B AUTH</div><div class="app-desc">Codes TOTP 2FA</div>
             </div>
             <div class="app-card" data-app="bgenpass" onclick="loadApp('bgenpass')">
+                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bgenpass')" aria-label="Informations">ℹ</button>
                 <div class="app-icon">🔑</div><div class="app-name">B GEN PASS</div><div class="app-desc">Mots de passe sécurisés</div>
             </div>
             <div class="app-card" data-app="bkeepnotes" onclick="loadApp('bkeepnotes')">
+                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bkeepnotes')" aria-label="Informations">ℹ</button>
                 <div class="app-icon">📝</div><div class="app-name">B KEEP NOTES</div><div class="app-desc">Notes chiffrées & coffre</div>
             </div>
             <div class="app-card" data-app="bpgp" onclick="loadApp('bpgp')">
+                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bpgp')" aria-label="Informations">ℹ</button>
                 <div class="app-icon">🛡️</div><div class="app-name">B PGP</div><div class="app-desc">Chiffrement & façade</div>
             </div>
             <div class="app-card" data-app="bstegano" onclick="loadApp('bstegano')">
+                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bstegano')" aria-label="Informations">ℹ</button>
                 <div class="app-icon">🖼️</div><div class="app-name">B STEGANO</div><div class="app-desc">Stéganographie & EXIF</div>
+            </div>
+        </div>
+
+        <div class="info-modal-overlay" id="info-modal" onclick="closeInfoModal(event)">
+            <div class="info-modal-box" onclick="event.stopPropagation()">
+                <h3 id="info-modal-title">// INFO</h3>
+                <p id="info-modal-text">Description de l'application...</p>
+                <button class="modal-btn" onclick="closeInfoModal()">FERMER</button>
             </div>
         </div>
     </div>
@@ -1616,7 +1732,6 @@
         section { display: flex; flex-direction: column; gap: 3px; }
         section h3 { margin: 0; font-size: 0.9rem; color: var(--accent-gold); }
         .modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 200; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
-        /* AJOUT : Assure que la confirmation s'affiche par-dessus tout */
         #custom-modal { z-index: 300; }
         .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); }
         .modal-card h3 { margin: 0 0 4px 0; font-size: 1rem; color: var(--accent-gold); }
@@ -2003,7 +2118,6 @@
         const modalFolderTitle = document.getElementById('modal-folder-title');
         document.getElementById('btn-folder-close').addEventListener('click', () => folderModal.classList.add('hidden'));
         
-        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-up').addEventListener('click', async () => {
             folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
@@ -2011,7 +2125,6 @@
             if (idx > 0) { const temp = list[idx - 1]; list[idx - 1] = list[idx]; list[idx] = temp; if (modalContext === 'public') { await saveData(); renderFoldersMenu(); } else { await savePrivateData(); renderPrivateFoldersMenu(); } }
         });
         
-        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-down').addEventListener('click', async () => {
             folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
@@ -2019,7 +2132,6 @@
             if (idx !== -1 && idx < list.length - 1) { const temp = list[idx + 1]; list[idx + 1] = list[idx]; list[idx] = temp; if (modalContext === 'public') { await saveData(); renderFoldersMenu(); } else { await savePrivateData(); renderPrivateFoldersMenu(); } }
         });
         
-        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-rename').addEventListener('click', async () => {
             folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
@@ -2037,7 +2149,6 @@
             }
         });
         
-        // MODIFICATION : Fermeture du menu AVANT l'action
         document.getElementById('btn-folder-delete').addEventListener('click', async () => {
             folderModal.classList.add('hidden');
             const list = (modalContext === 'public') ? folders : privateFolders;
@@ -2516,7 +2627,7 @@
 </html>
     </template>
 
-    <!-- APP 4 : B PGP (MIS À JOUR : sel aléatoire + 263 000 itérations) -->
+    <!-- APP 4 : B PGP -->
     <template id="tpl-bpgp">
 <!DOCTYPE html>
 <html lang="fr" class="dark">
@@ -4481,6 +4592,48 @@
        LOGIQUE DE B SUITE
        ========================================== */
     let currentApp = null;
+
+    // --- Données explicatives des applications ---
+    const appInfoData = {
+        bauth: {
+            title: "🔐 B AUTH",
+            text: "Générateur de codes d'authentification à deux facteurs (TOTP). Sécurisez vos comptes en ligne avec des codes temporaires, gérez plusieurs comptes, et organisez-les avec des tags. Les données restent 100% locales sur votre appareil."
+        },
+        bgenpass: {
+            title: "🔑 B GEN PASS",
+            text: "Générateur de mots de passe robustes et analyseur de sécurité. Créez des clés complexes, des passphrases mémorables, ou des QR codes Wi-Fi. Vérifiez la force de vos mots de passe et leur présence dans des fuites de données (HIBP)."
+        },
+        bkeepnotes: {
+            title: "📝 B KEEP NOTES",
+            text: "Prenez des notes sécurisées avec un éditeur riche. Comprend un coffre-fort pour mots de passe, des notes privées protégées par PIN, et un outil de chiffrement de messages AES-256. Sauvegarde et importation incluses.<br><br><strong style='color: var(--yellow);'>🔢 Codes PIN par défaut :</strong><br>• PIN principal : <code style='color: var(--cyan); background: rgba(0,240,255,0.1); padding: 2px 6px; border-radius: 4px;'>1234</code><br>• PIN caché (secondaire) : <code style='color: var(--cyan); background: rgba(0,240,255,0.1); padding: 2px 6px; border-radius: 4px;'>6789</code><br><br><em style='color: var(--pink); font-size: 0.75rem;'>⚠️ Pensez à les modifier via le menu latéral → « Changer les codes PIN ».</em>"
+        },
+        bpgp: {
+            title: "🛡️ B PGP",
+            text: "Chiffrement de messages de haut niveau (AES-256, PBKDF2 avec 263 000 itérations). Créez des messages chiffrés classiques ou dissimulez vos secrets dans des textes anodins (stéganographie par caractères invisibles)."
+        },
+        bstegano: {
+            title: "🖼️ B STEGANO",
+            text: "Masquez des messages secrets directement dans les pixels d'une image (LSB) avec chiffrement AES-GCM optionnel. Extrayez des messages cachés et nettoyez les métadonnées EXIF (y compris la géolocalisation GPS) des photos."
+        }
+    };
+
+    // --- Fonctions du Modal d'information ---
+    function openInfoModal(appName) {
+        const data = appInfoData[appName];
+        if (!data) return;
+        
+        const modal = document.getElementById('info-modal');
+        document.getElementById('info-modal-title').innerHTML = data.title;
+        document.getElementById('info-modal-text').innerHTML = data.text;
+        
+        modal.classList.add('active');
+    }
+
+    function closeInfoModal(event) {
+        // Si on clique sur l'overlay (et non la box) ou sur le bouton
+        if (event && event.target !== event.currentTarget && event.target.className !== 'modal-btn') return;
+        document.getElementById('info-modal').classList.remove('active');
+    }
 
     function loadApp(appName) {
         const container = document.getElementById('app-container');
