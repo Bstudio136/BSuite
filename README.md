@@ -201,7 +201,7 @@ For any request (commercial use, partnership, etc.), **contact the author**: [@B
 
 ---
 
-*Last updated: September 30, 2026*
+<a href="https://hiddenswap.com/pay/AgRPwfFe" target="_blank" rel="noopener"><img src="https://hiddenswap.com/pay/AgRPwfFe/button.svg" alt="Donate with any coin" width="247" height="44"></a>
 
 <br>
 
@@ -405,8 +405,7 @@ Pour toute demande (usage commercial, partenariat, etc.), **contactez l'auteur**
 
 ---
 
-*Dernière mise à jour : 30 septembre 2026*
-
+<a href="https://hiddenswap.com/pay/AgRPwfFe" target="_blank" rel="noopener"><img src="https://hiddenswap.com/pay/AgRPwfFe/button.svg" alt="Donate with any coin" width="247" height="44"></a>
 <br>
 
 <p align="center"><a href="#français">⬆️ Haut de page</a> · <a href="#english">🇬🇧 Switch to English</a></p>
