@@ -170,25 +170,28 @@ Result:    → B SUITE
 
 ---
 
-## 📄 License — All Rights Reserved
+## 📄 License — Use As-Is Only
 
 **Copyright © 2026 Bstudio136. All rights reserved.**
 
-This project and all its source code, files, assets, and documentation are **strictly proprietary**.
+This project is provided **"AS IS"** and may be used **only in its original, unmodified form**.
+
+**You ARE allowed to:**
+- ✅ Use the deployed tool as-is (via the official GitHub Pages link) for personal purposes.
+- ✅ View the source code on GitHub for informational purposes.
 
 **You are NOT allowed to:**
-- ❌ Copy, reproduce, or duplicate any part of this project.
-- ❌ Modify, adapt, translate, or create derivative works.
-- ❌ Distribute, publish, sublicense, sell, rent, or lease any part of it.
-- ❌ Use it (in whole or in part) in any commercial or non-commercial product.
+- ❌ Copy, download, reproduce, or duplicate any part of this project.
+- ❌ Modify, adapt, translate, fork, or create derivative works of any part of it.
+- ❌ Redistribute, publish, sublicense, sell, rent, or lease any part of it.
+- ❌ Reuse any portion of the source code (HTML, CSS, JS, assets) in another project.
 - ❌ Claim authorship or remove/alter copyright notices.
 
-**You are ONLY allowed to:**
-- ✅ View this repository on GitHub for personal, informational purposes.
+**No warranty:** The software is provided without warranty of any kind, express or implied. The author is not liable for any damage or data loss resulting from its use.
 
 Any unauthorized use is strictly prohibited and may result in legal action.
 
-For any request (commercial use, partnership, etc.), **contact the author** at the GitHub profile: [@Bstudio136](https://github.com/Bstudio136).
+For any request (commercial use, partnership, etc.), **contact the author**: [@Bstudio136](https://github.com/Bstudio136).
 
 ---
 
@@ -371,25 +374,28 @@ Résultat :  → B SUITE
 
 ---
 
-## 📄 Licence — Tous droits réservés
+## 📄 Licence — Utilisation telle quelle uniquement
 
 **Copyright © 2026 Bstudio136. Tous droits réservés.**
 
-Ce projet ainsi que l'intégralité de son code source, de ses fichiers, de ses ressources et de sa documentation sont **strictement propriétaires**.
+Ce projet est fourni **« EN L'ÉTAT »** et ne peut être utilisé **que dans sa forme originale et non modifiée**.
+
+**Vous êtes autorisé à :**
+- ✅ Utiliser l'outil tel quel (via le lien officiel GitHub Pages) à des fins personnelles.
+- ✅ Consulter le code source sur GitHub à des fins informatives.
 
 **Il est formellement interdit de :**
-- ❌ Copier, reproduire ou dupliquer toute partie de ce projet.
-- ❌ Modifier, adapter, traduire ou créer des œuvres dérivées.
-- ❌ Distribuer, publier, sous-licencier, vendre, louer ou prêter toute partie de ce projet.
-- ❌ Utiliser ce projet (en tout ou en partie) dans un produit commercial ou non commercial.
+- ❌ Copier, télécharger, reproduire ou dupliquer toute partie de ce projet.
+- ❌ Modifier, adapter, traduire, forker ou créer des œuvres dérivées.
+- ❌ Redistribuer, publier, sous-licencier, vendre, louer ou prêter toute partie de ce projet.
+- ❌ Réutiliser toute portion du code source (HTML, CSS, JS, ressources) dans un autre projet.
 - ❌ Revendiquer la paternité ou supprimer/modifier les mentions de copyright.
 
-**Vous êtes uniquement autorisé à :**
-- ✅ Consulter ce dépôt sur GitHub à des fins personnelles et informatives.
+**Aucune garantie :** Le logiciel est fourni sans garantie d'aucune sorte, expresse ou implicite. L'auteur ne saurait être tenu responsable de tout dommage ou perte de données résultant de son utilisation.
 
 Toute utilisation non autorisée est strictement interdite et pourra faire l'objet de poursuites.
 
-Pour toute demande (usage commercial, partenariat, etc.), **contactez l'auteur** sur son profil GitHub : [@Bstudio136](https://github.com/Bstudio136).
+Pour toute demande (usage commercial, partenariat, etc.), **contactez l'auteur** : [@Bstudio136](https://github.com/Bstudio136).
 
 ---
 
