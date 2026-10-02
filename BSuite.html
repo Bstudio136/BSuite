@@ -339,6 +339,35 @@
             box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
         }
 
+        /* ===== HUB FOOTER ===== */
+        .hub-footer {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(0.6rem, 1.5vw, 0.72rem);
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-top: 4px;
+            padding: 0 10px;
+        }
+        .hub-footer a {
+            color: #ffb703;
+            text-decoration: none;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(255, 183, 3, 0.7), 0 0 16px rgba(255, 183, 3, 0.4);
+            animation: footerLinkBlink 1.6s ease-in-out infinite;
+            transition: color 0.2s;
+        }
+        .hub-footer a:hover {
+            color: #ffe08a;
+            text-shadow: 0 0 14px rgba(255, 183, 3, 1), 0 0 28px rgba(255, 183, 3, 0.7);
+        }
+        @keyframes footerLinkBlink {
+            0%, 100% { opacity: 1; filter: drop-shadow(0 0 6px rgba(255, 183, 3, 0.6)); }
+            50% { opacity: 0.35; filter: drop-shadow(0 0 2px rgba(255, 183, 3, 0.2)); }
+        }
+
         /* --- Bouton Info sur les cartes --- */
         .info-btn {
             position: absolute;
@@ -634,6 +663,11 @@
                 <div class="app-name">B STEGANO</div>
                 <div class="app-desc">Stéganographie & EXIF</div>
             </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="hub-footer">
+            B Suite © 2024 - <a href="https://bstudio136.github.io/mylink/" target="_blank" rel="noopener noreferrer">Bstudio136</a>
         </div>
 
         <div class="info-modal-overlay" id="info-modal" onclick="closeInfoModal(event)">
@@ -1542,7 +1576,7 @@
             if (!password || password.length < 3) { pwnedVal.innerHTML = '<span class="badge badge-safe">Incomplet</span>'; return; }
             try {
                 const hashBuffer = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
-                const hashHex = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).toUpperCase();
+                const hashHex = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
                 const prefix = hashHex.slice(0, 5), suffix = hashHex.slice(5);
                 const res = await fetch('https://api.pwnedpasswords.com/range/' + prefix);
                 if (!res.ok) throw new Error();
