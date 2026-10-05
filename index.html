@@ -4,16 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Calculatrice</title>
-    
-<!-- Favicon universel (navigateurs et iOS) -->
-<link rel="icon" href="Sources/icon-ios.png">
-<link rel="apple-touch-icon" href="Sources/icon-ios.png">
 
-<!-- Configuration Android -->
-<meta name="theme-color" content="#000000">
+<link rel="icon" href="Sources/icon-ios.png" id="favicon-link">
+<link rel="apple-touch-icon" href="Sources/icon-ios.png" id="apple-icon-link">
+<meta name="theme-color" content="#000000" id="theme-color-meta">
 <link rel="manifest" href="Sources/site.webmanifest">
 
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800;900&family=JetBrains+Mono:wght@300;400;600;700&family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #03050a;
@@ -42,240 +39,415 @@
             overflow: hidden;
         }
 
-        /* ===== CALCULATRICE LEURRE ===== */
-        #calculator-disguise {
+        /* ============================================================
+           CALCULATRICE iOS
+           ============================================================ */
+       #calculator-disguise-ios {
             position: fixed; inset: 0; background: #000; z-index: 100000;
-            display: flex; flex-direction: column; justify-content: flex-end;
+            display: none; flex-direction: column; justify-content: flex-end;
             padding: 20px; padding-bottom: max(20px, env(safe-area-inset-bottom));
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             width: 100vw; height: 100dvh; overflow: hidden;
         }
+        #calculator-disguise-ios.active { display: flex; }
         .calc-wrapper {
             width: 100%; max-width: 360px; margin: 0 auto;
             display: flex; flex-direction: column; gap: 8px;
         }
-
-        /* Conteneur d'affichage à deux lignes */
         .calc-display-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            align-items: flex-end;
-            gap: 0px;
-            padding: 4px 4px 0 0;
-            min-height: 120px;
-            overflow: hidden;
+            width: 100%; display: flex; flex-direction: column;
+            justify-content: flex-end; align-items: flex-end;
+            gap: 0px; padding: 4px 4px 0 0;
+            min-height: 120px; overflow: hidden;
         }
         .calc-expression {
-            color: #fff;
-            font-size: clamp(1.8rem, 7vw, 2.6rem);
-            font-weight: 300;
-            letter-spacing: 1px;
-            min-height: 2rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            text-align: right;
-            width: 100%;
-            line-height: 1.1;
-            transition: color 0.2s;
-            opacity: 0.9;
+            color: #fff; font-size: clamp(1.8rem, 7vw, 2.6rem);
+            font-weight: 300; letter-spacing: 1px;
+            min-height: 2rem; white-space: nowrap;
+            overflow: hidden; text-overflow: ellipsis;
+            max-width: 100%; text-align: right;
+            width: 100%; line-height: 1.1;
+            transition: color 0.2s; opacity: 0.9;
         }
         .calc-display {
-            color: #fff;
-            font-size: clamp(3rem, 14vw, 4.5rem);
-            font-weight: 300;
-            letter-spacing: 1px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 100%;
-            text-align: right;
-            width: 100%;
-            line-height: 1.05;
+            color: #fff; font-size: clamp(3rem, 14vw, 4.5rem);
+            font-weight: 300; letter-spacing: 1px;
+            white-space: nowrap; overflow: hidden;
+            text-overflow: ellipsis; max-width: 100%;
+            text-align: right; width: 100%; line-height: 1.05;
         }
-
-        /* Barre d'actions (Historique + Effacer) placée juste en dessous du résultat */
         .calc-action-bar {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 4px;
-            padding: 0 4px;
-            margin-bottom: 6px;
+            display: flex; justify-content: flex-end; align-items: center;
+            gap: 4px; padding: 0 4px; margin-bottom: 6px;
         }
         .calc-icon-btn {
-            background: transparent;
-            border: none;
-            color: #a5a5a5;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 50%;
+            background: transparent; border: none; color: #a5a5a5;
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; border-radius: 50%;
             transition: background 0.15s, color 0.15s;
-            padding: 0;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
+            padding: 0; -webkit-tap-highlight-color: transparent;
         }
-        .calc-icon-btn:hover,
-        .calc-icon-btn:active {
-            background: #1c1c1e;
-            color: #fff;
-        }
-        .calc-icon-btn svg {
-            width: 22px;
-            height: 22px;
-            pointer-events: none;
-        }
-
+        .calc-icon-btn:active { background: #1c1c1e; color: #fff; }
+        .calc-icon-btn svg { width: 22px; height: 22px; pointer-events: none; }
         .calc-keypad {
             display: grid; grid-template-columns: repeat(4, 1fr);
             gap: 10px; width: 100%;
         }
         .calc-btn {
             background: #333; color: #fff; border: none; border-radius: 50%;
-            width: 100%; aspect-ratio: 1 / 1; 
+            width: 100%; aspect-ratio: 1 / 1;
             font-size: clamp(1.8rem, 8vw, 2.6rem);
             cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: background 0.1s; user-select: none; -webkit-tap-highlight-color: transparent;
-            padding: 0; margin: 0; box-sizing: border-box; min-width: 0; min-height: 0;
-            font-family: inherit;
+            transition: background 0.1s; user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            padding: 0; margin: 0; font-family: inherit;
         }
         .calc-btn:active { background: #555; }
         .calc-btn.op { background: #ff9f0a; color: #fff; font-weight: 500; }
         .calc-btn.op:active { background: #ffb340; }
         .calc-btn.clear { background: #a5a5a5; color: #000; font-weight: 500; }
         .calc-btn.clear:active { background: #d4d4d4; }
-        
         .calc-btn.zero {
-            grid-column: span 2;
-            border-radius: 40px;
-            justify-content: flex-start;
-            padding-left: 25px;
+            grid-column: span 2; border-radius: 40px;
+            justify-content: flex-start; padding-left: 25px;
             aspect-ratio: auto;
         }
-
-        /* ===== PANNEAU HISTORIQUE ===== */
         .calc-history-panel {
-            position: fixed;
-            left: 0; right: 0; bottom: 0;
+            position: fixed; left: 0; right: 0; bottom: 0;
             background: #1a1a1a;
-            border-top-left-radius: 18px;
-            border-top-right-radius: 18px;
-            max-height: 65vh;
-            display: flex;
-            flex-direction: column;
+            border-top-left-radius: 18px; border-top-right-radius: 18px;
+            max-height: 65vh; display: flex; flex-direction: column;
             transform: translateY(110%);
             transition: transform 0.32s cubic-bezier(0.25, 0.8, 0.35, 1);
             z-index: 100001;
             box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.7);
             padding-bottom: env(safe-area-inset-bottom);
-            will-change: transform;
         }
         .calc-history-panel.open { transform: translateY(0); }
         .calc-history-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px 14px; border-bottom: 1px solid #2a2a2a;
+            color: #fff; font-size: 1.05rem; font-weight: 600;
+        }
+        .calc-history-header button {
+            background: transparent; border: none; color: #ff9f0a;
+            font-size: 0.9rem; font-weight: 500; cursor: pointer;
+            padding: 6px 10px; border-radius: 8px; font-family: inherit;
+        }
+        .calc-history-list { overflow-y: auto; flex: 1; padding: 4px 0; }
+        .calc-history-item {
+            padding: 12px 20px; display: flex; flex-direction: column;
+            align-items: flex-end; gap: 4px; cursor: pointer;
+            border-bottom: 1px solid #1f1f1f;
+        }
+        .calc-history-item .hist-expr {
+            color: #8a8a8a; font-size: 0.9rem; font-weight: 300;
+        }
+        .calc-history-item .hist-result {
+            color: #fff; font-size: 1.5rem; font-weight: 400;
+        }
+        .calc-history-empty {
+            padding: 40px 20px; text-align: center;
+            color: #666; font-size: 0.9rem;
+        }
+
+        /* ============================================================
+           CALCULATRICE ANDROID (Material You)
+           ============================================================ */
+        #calculator-disguise-android {
+            --and-bg: #1A1A1E;
+            --and-text: #E6E1E5;
+            --and-text-muted: #938F99;
+            --and-topbar-icon: #CAC4D0;
+            --and-num-bg: #2A2A2E;
+            --and-num-text: #E6E1E5;
+            --and-op-bg: #4A3D4D;
+            --and-op-text: #E8B8E0;
+            --and-ac-bg: #1D4C38;
+            --and-ac-text: #6EE7B7;
+            --and-eq-bg: #D0BBF0;
+            --and-eq-text: #381E72;
+            --and-display-result: #C9C4D0;
+
+            --and-sheet-bg: #1F1F22;
+            --and-sheet-border: #2D2D30;
+            --and-sheet-hover: rgba(208, 187, 240, 0.08);
+            --and-sheet-handle: #5A5A5E;
+            --and-menu-bg: #2A2A2E;
+            --and-menu-text: #E8EAED;
+            --and-menu-hover: rgba(255, 255, 255, 0.06);
+
+            position: fixed; inset: 0; z-index: 100000;
+            background: var(--and-bg) !important;
+            display: none; flex-direction: column;
+            width: 100vw; height: 100dvh;
+            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+            padding-top: env(safe-area-inset-top);
+            overflow: hidden;
+            color: var(--and-text);
+            transition: background 0.25s ease;
+        }
+        #calculator-disguise-android.theme-light {
+            --and-bg: #FEF7FF;
+            --and-text: #1D1B20;
+            --and-text-muted: #49454F;
+            --and-topbar-icon: #49454F;
+            --and-num-bg: #E7E0EC;
+            --and-num-text: #1D1B20;
+            --and-op-bg: #FFD8E6;
+            --and-op-text: #31111D;
+            --and-ac-bg: #A6F0CF;
+            --and-ac-text: #002114;
+            --and-eq-bg: #6750A4;
+            --and-eq-text: #FFFFFF;
+            --and-display-result: #49454F;
+            --and-sheet-bg: #F3EDF7;
+            --and-sheet-border: #DCD5E0;
+            --and-sheet-hover: rgba(95, 77, 112, 0.08);
+            --and-sheet-handle: #CAC4D0;
+            --and-menu-bg: #F3EDF7;
+            --and-menu-text: #1C1B1F;
+            --and-menu-hover: rgba(95, 77, 112, 0.08);
+        }
+        #calculator-disguise-android.active { display: flex; }
+
+        .android-topbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 8px 10px 2px;
+            flex-shrink: 0;
+        }
+        .android-topbar-btn {
+            background: transparent; border: none;
+            color: var(--and-topbar-icon);
+            width: 40px; height: 40px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition: background 0.15s;
+        }
+        .android-topbar-btn:active { background: rgba(127, 127, 127, 0.15); }
+        .android-topbar-btn svg { width: 20px; height: 20px; }
+        .android-topbar-btn.history-active {
+            background: var(--and-op-bg);
+            color: var(--and-op-text);
+        }
+
+        .android-display-area {
+            flex: 1;
+            display: flex; flex-direction: column;
+            justify-content: flex-end; align-items: flex-end;
+            padding: 0 20px 6px;
+            overflow: hidden;
+            min-height: 40px;
+            gap: 2px;
+        }
+        .android-line {
+            width: 100%;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.15s, font-size 0.15s;
+        }
+        .android-line.primary {
+            color: var(--and-text);
+            font-size: clamp(3rem, 15vw, 4rem);
+            font-weight: 300;
+            letter-spacing: -0.5px;
+            line-height: 1.05;
+        }
+        .android-line.secondary {
+            color: var(--and-display-result);
+            font-size: clamp(1.6rem, 8vw, 2.2rem);
+            font-weight: 400;
+            line-height: 1.15;
+            letter-spacing: 0.2px;
+        }
+        .android-line.muted {
+            color: var(--and-text-muted);
+            font-size: clamp(1.25rem, 5.5vw, 1.6rem);
+            font-weight: 400;
+            line-height: 1.15;
+            letter-spacing: 0.2px;
+        }
+
+        .android-chevron-wrapper {
+            padding: 0 22px 2px;
+            display: flex; justify-content: flex-start;
+            flex-shrink: 0;
+        }
+        .android-chevron-btn {
+            background: transparent; border: none;
+            color: var(--and-text-muted);
+            padding: 3px; cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 50%;
+        }
+        .android-chevron-btn:active { background: rgba(127, 127, 127, 0.15); }
+        .android-chevron-btn svg { width: 18px; height: 18px; }
+
+        .android-keypad {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px; 
+            padding: 0 4px 8px; 
+            padding-bottom: max(8px, env(safe-area-inset-bottom));
+            flex-shrink: 0;
+        }
+        .android-keypad-scientific { gap: 4px; }
+
+        .android-btn {
+            aspect-ratio: 1 / 1;
+            width: 100%;
+            border-radius: 50%;
+            border: none;
+            font-family: 'Roboto', system-ui, sans-serif;
+            font-size: clamp(2.5rem, 12.5vw, 3rem);
+            font-weight: 400;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: filter 0.1s, background 0.15s;
+            padding: 0; margin: 0; min-width: 0;
+            line-height: 1;
+            letter-spacing: -0.5px;
+            color: var(--and-text);
+        }
+        .android-btn:active { filter: brightness(1.3); }
+
+        .android-keypad-scientific .android-btn {
+            aspect-ratio: 1.85 / 1;
+            font-size: clamp(1.1rem, 5vw, 1.4rem);
+            font-weight: 400;
+            border-radius: 22px;
+            letter-spacing: 0;
+        }
+
+        .android-btn.num { background: var(--and-num-bg) !important; color: var(--and-num-text) !important; font-weight: 400; }
+        
+        .android-btn.op { 
+            background: var(--and-op-bg) !important; 
+            color: var(--and-op-text) !important; 
+            font-weight: 400; 
+            font-size: clamp(2.7rem, 14vw, 3.2rem); 
+        }
+        
+        .android-btn.ac { 
+            background: var(--and-ac-bg) !important; 
+            color: var(--and-ac-text) !important; 
+            font-size: clamp(2.2rem, 11vw, 2.6rem); 
+            font-weight: 500; 
+        }
+        
+        .android-btn.parens { 
+            background: var(--and-op-bg) !important; 
+            color: var(--and-op-text) !important; 
+            font-weight: 400; 
+            font-size: clamp(2.2rem, 11vw, 2.6rem); 
+        }
+        
+        .android-btn.sci { background: var(--and-op-bg) !important; color: var(--and-op-text) !important; font-weight: 400; }
+        .android-btn.backspace { background: var(--and-num-bg) !important; color: var(--and-num-text) !important; }
+        .android-btn.equals { background: var(--and-eq-bg) !important; color: var(--and-eq-text) !important; }
+
+        .android-btn svg { width: 34px; height: 34px; }
+        .android-keypad-scientific .android-btn svg { width: 22px; height: 22px; }
+
+        .android-btn.sci.active {
+            background: var(--and-eq-bg) !important;
+            color: var(--and-eq-text) !important;
+        }
+
+        .android-history-sheet {
+            position: fixed;
+            left: 0; right: 0;
+            top: 8%;
+            bottom: 0;
+            background: var(--and-sheet-bg);
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            transform: translateY(110%);
+            transition: transform 0.32s cubic-bezier(0.25, 0.8, 0.35, 1);
+            z-index: 100001;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.3);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .android-history-sheet.open { transform: translateY(0); }
+
+        .history-drag-handle {
+            width: 32px; height: 4px;
+            background: var(--and-sheet-handle);
+            border-radius: 2px;
+            margin: 10px auto 6px;
+            flex-shrink: 0;
+        }
+        .history-title-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px 20px 14px;
-            border-bottom: 1px solid #2a2a2a;
-            color: #fff;
-            font-size: 1.05rem;
-            font-weight: 600;
+            padding: 6px 22px 14px;
+            color: var(--and-text);
+            font-size: 1rem;
+            font-weight: 400;
+            border-bottom: 1px solid var(--and-sheet-border);
             flex-shrink: 0;
         }
-        .calc-history-header button {
-            background: transparent;
-            border: none;
-            color: #ff9f0a;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            padding: 6px 10px;
-            border-radius: 8px;
-            transition: background 0.15s;
-            font-family: inherit;
+        .history-title-row svg {
+            width: 16px; height: 16px;
+            color: var(--and-text-muted);
         }
-        .calc-history-header button:active { background: #2a2a2a; }
-        .calc-history-list {
-            overflow-y: auto;
+        .history-list {
             flex: 1;
-            padding: 4px 0;
+            overflow-y: auto;
+            padding: 6px 0;
             -webkit-overflow-scrolling: touch;
         }
-        .calc-history-item {
-            padding: 12px 20px;
+        .history-item {
+            padding: 10px 22px;
             display: flex;
             flex-direction: column;
             align-items: flex-end;
-            gap: 4px;
+            gap: 2px;
             cursor: pointer;
+            border-bottom: 1px solid var(--and-sheet-border);
             transition: background 0.15s;
-            border-bottom: 1px solid #1f1f1f;
-            -webkit-tap-highlight-color: transparent;
         }
-        .calc-history-item:active { background: #2a2a2a; }
-        .calc-history-item .hist-expr {
-            color: #8a8a8a;
+        .history-item:active { background: var(--and-sheet-hover); }
+        .history-item .h-expr {
+            color: var(--and-text-muted);
             font-size: 0.9rem;
-            letter-spacing: 1px;
-            font-weight: 300;
-        }
-        .calc-history-item .hist-result {
-            color: #fff;
-            font-size: 1.5rem;
             font-weight: 400;
-            letter-spacing: 1px;
         }
-        .calc-history-empty {
-            padding: 40px 20px;
+        .history-item .h-result {
+            color: var(--and-text);
+            font-size: 1.4rem;
+            font-weight: 400;
+        }
+        .history-empty {
+            padding: 40px 22px;
             text-align: center;
-            color: #666;
+            color: var(--and-text-muted);
             font-size: 0.9rem;
         }
 
-        /* ===== CALCULATRICE SCIENTIFIQUE MODALE ===== */
-        .sci-modal {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 100002;
-            display: none; justify-content: center; align-items: center;
-            padding: 20px;
+        #android-menu-card {
+            background: var(--and-menu-bg);
+            color: var(--and-menu-text);
         }
-        .sci-modal.active { display: flex; }
-        .sci-content {
-            background: #1c1c1e; padding: 20px; border-radius: 15px; width: 100%; max-width: 400px;
-            color: #fff; display: flex; flex-direction: column; gap: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        .android-menu-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 18px;
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: background 0.15s;
         }
-        .sci-display {
-            background: #000; padding: 15px; border-radius: 10px; text-align: right;
-            font-size: 1.5rem; min-height: 60px; word-break: break-all;
-            font-family: 'JetBrains Mono', monospace; color: #00f0ff;
-            display: flex; align-items: flex-end; justify-content: flex-end;
-        }
-        .sci-keypad {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-        }
-        .sci-keypad button {
-            background: #333; color: #fff; border: none; padding: 12px; border-radius: 8px;
-            font-size: 1rem; cursor: pointer; font-family: inherit;
-            transition: background 0.1s;
-        }
-        .sci-keypad button:active { background: #555; }
-        .sci-keypad button.op { background: #ff9f0a; }
-        .sci-keypad button.op:active { background: #ffb340; }
-        .sci-keypad button.clear { background: #a5a5a5; color: #000; }
-        .sci-keypad button.clear:active { background: #d4d4d4; }
-        .sci-close-btn {
-            background: #ff9f0a; color: #fff; border: none; padding: 12px; border-radius: 8px;
-            width: 100%; font-weight: bold; cursor: pointer; font-family: inherit;
-            font-size: 0.9rem;
-        }
-        .sci-close-btn:active { background: #ffb340; }
+        .android-menu-item:active { background: var(--and-menu-hover); }
+        .android-menu-icon { width: 20px; height: 20px; flex-shrink: 0; }
 
         /* ===== HUB ===== */
         .hub-container {
@@ -285,7 +457,6 @@
             position: relative; overflow: hidden;
         }
         .hub-container.active { display: flex; }
-
         .hub-container::before, .hub-container::after {
             content: ''; position: absolute; border-radius: 50%; pointer-events: none; z-index: 0;
         }
@@ -301,21 +472,19 @@
         }
         @keyframes floatOrb1 { 0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; } 50% { transform: translate(80px, 60px) scale(1.2); opacity: 1; } }
         @keyframes floatOrb2 { 0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; } 50% { transform: translate(-100px, -80px) scale(1.15); opacity: 1; } }
-
         .particles-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
         .particle {
             position: absolute; width: 3px; height: 3px; border-radius: 50%;
-            background: var(--cyan); box-shadow: 0 0 8px var(--cyan), 0 0 16px rgba(0, 240, 255, 0.6);
+            background: var(--cyan); box-shadow: 0 0 8px var(--cyan);
             animation: particleFloat linear infinite;
         }
-        .particle:nth-child(1) { left: 8%; top: 100%; animation-duration: 15s; animation-delay: 0s; background: var(--cyan); }
-        .particle:nth-child(2) { left: 22%; top: 100%; animation-duration: 18s; animation-delay: 2s; background: var(--violet); box-shadow: 0 0 8px var(--violet), 0 0 16px rgba(168, 85, 247, 0.6); }
+        .particle:nth-child(1) { left: 8%; top: 100%; animation-duration: 15s; }
+        .particle:nth-child(2) { left: 22%; top: 100%; animation-duration: 18s; animation-delay: 2s; background: var(--violet); }
         .particle:nth-child(3) { left: 40%; top: 100%; animation-duration: 20s; animation-delay: 4s; background: var(--cyan); }
-        .particle:nth-child(4) { left: 58%; top: 100%; animation-duration: 16s; animation-delay: 1s; background: var(--pink); box-shadow: 0 0 8px var(--pink), 0 0 16px rgba(255, 0, 85, 0.6); }
-        .particle:nth-child(5) { left: 74%; top: 100%; animation-duration: 22s; animation-delay: 3s; background: var(--violet); box-shadow: 0 0 8px var(--violet), 0 0 16px rgba(168, 85, 247, 0.6); }
+        .particle:nth-child(4) { left: 58%; top: 100%; animation-duration: 16s; animation-delay: 1s; background: var(--pink); }
+        .particle:nth-child(5) { left: 74%; top: 100%; animation-duration: 22s; animation-delay: 3s; background: var(--violet); }
         .particle:nth-child(6) { left: 90%; top: 100%; animation-duration: 19s; animation-delay: 5s; background: var(--cyan); }
         @keyframes particleFloat { 0% { transform: translateY(0) scale(1); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(-110vh) scale(0.5); opacity: 0; } }
-
         .hub-logo { text-align: center; margin-bottom: 10px; position: relative; z-index: 1; }
         .hub-logo h1 {
             font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 8vw, 3.5rem); font-weight: 900;
@@ -326,65 +495,40 @@
         }
         @keyframes titleShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
         @keyframes titleGlow {
-            from { filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.5)) drop-shadow(0 0 30px rgba(0, 240, 255, 0.3)); }
-            to { filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.8)) drop-shadow(0 0 50px rgba(168, 85, 247, 0.5)) drop-shadow(0 0 70px rgba(255, 0, 85, 0.3)); }
+            from { filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.5)); }
+            to { filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.8)); }
         }
-        .hub-subtitle { font-size: clamp(0.7rem, 2vw, 0.9rem); color: var(--cyan); letter-spacing: 3px; margin-top: 8px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.8), 0 0 20px rgba(0, 240, 255, 0.4); animation: subtitlePulse 3s ease-in-out infinite; }
-        @keyframes subtitlePulse { 0%, 100% { opacity: 0.7; letter-spacing: 3px; } 50% { opacity: 1; letter-spacing: 4px; } }
-
-        .apps-grid { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 16px; width: 100%; max-width: 720px; padding: 0 10px; position: relative; z-index: 1; }
+        .hub-subtitle { font-size: clamp(0.7rem, 2vw, 0.9rem); color: var(--cyan); letter-spacing: 3px; margin-top: 8px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.8); animation: subtitlePulse 3s ease-in-out infinite; }
+        @keyframes subtitlePulse { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+        .apps-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; width: 100%; max-width: 720px; position: relative; z-index: 1; }
         .app-card {
             background: linear-gradient(135deg, rgba(12, 16, 30, 0.95) 0%, rgba(20, 25, 45, 0.9) 100%);
             border: 1.5px solid rgba(0, 240, 255, 0.3); border-radius: 12px; padding: 18px 12px;
             display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
+            transition: all 0.3s; position: relative; overflow: hidden;
             flex: 0 0 calc(33.333% - 12px); max-width: 200px; min-width: 140px;
             clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.15), inset 0 0 20px rgba(0, 240, 255, 0.05);
             animation: cardFloat 6s ease-in-out infinite;
         }
-        .app-card:nth-child(1) { animation-delay: 0s; } .app-card:nth-child(2) { animation-delay: 0.5s; }
-        .app-card:nth-child(3) { animation-delay: 1s; } .app-card:nth-child(4) { animation-delay: 1.5s; }
-        .app-card:nth-child(5) { animation-delay: 2s; }
         @keyframes cardFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-
-        .app-card::after { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.15) 50%, transparent 100%); animation: cardSweep 4s ease-in-out infinite; pointer-events: none; }
-        .app-card:nth-child(1)::after { animation-delay: 0s; } .app-card:nth-child(2)::after { animation-delay: 0.7s; }
-        .app-card:nth-child(3)::after { animation-delay: 1.4s; } .app-card:nth-child(4)::after { animation-delay: 2.1s; }
-        .app-card:nth-child(5)::after { animation-delay: 2.8s; }
-        @keyframes cardSweep { 0% { left: -100%; } 50%, 100% { left: 100%; } }
-
-        .app-card::before { content: ''; position: absolute; inset: 0; background: var(--grad-primary); opacity: 0; transition: opacity 0.3s; z-index: -1; }
-        .app-card:hover, .app-card:active { transform: translateY(-8px) scale(1.03); border-color: var(--cyan); box-shadow: 0 15px 40px rgba(0, 240, 255, 0.4), 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 25px rgba(0, 240, 255, 0.1); animation-play-state: paused; }
-        .app-card:hover::before { opacity: 0.08; }
-
-        .app-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; background: rgba(0, 240, 255, 0.12); border: 1.5px solid rgba(0, 240, 255, 0.4); position: relative; transition: all 0.3s ease; }
-        .app-icon::before { content: ''; position: absolute; inset: -4px; border-radius: 14px; background: inherit; opacity: 0.4; z-index: -1; animation: iconHalo 2s ease-in-out infinite; }
-        .app-card:nth-child(1) .app-icon::before { animation-delay: 0s; } .app-card:nth-child(2) .app-icon::before { animation-delay: 0.4s; }
-        .app-card:nth-child(3) .app-icon::before { animation-delay: 0.8s; } .app-card:nth-child(4) .app-icon::before { animation-delay: 1.2s; }
-        .app-card:nth-child(5) .app-icon::before { animation-delay: 1.6s; }
-        @keyframes iconHalo { 0%, 100% { transform: scale(1); opacity: 0.3; } 50% { transform: scale(1.15); opacity: 0.7; } }
-        .app-card:hover .app-icon { transform: scale(1.1); box-shadow: 0 0 20px currentColor; }
-
+        .app-card:hover, .app-card:active {
+            transform: translateY(-8px) scale(1.03); border-color: var(--cyan);
+            box-shadow: 0 15px 40px rgba(0, 240, 255, 0.4);
+        }
+        .app-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.7rem; background: rgba(0, 240, 255, 0.12); border: 1.5px solid rgba(0, 240, 255, 0.4); }
         @media (max-width: 620px) {
-            .app-card { flex: 0 0 calc(33.333% - 11px); min-width: 100px; padding: 14px 8px; gap: 8px; }
+            .app-card { flex: 0 0 calc(33.333% - 11px); min-width: 100px; padding: 14px 8px; }
             .app-icon { width: 38px; height: 38px; font-size: 1.3rem; border-radius: 10px; }
         }
-        .app-name { font-family: 'Orbitron', sans-serif; font-size: 0.78rem; font-weight: 700; text-align: center; letter-spacing: 0.5px; word-break: break-word; color: var(--text); text-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
+        .app-name { font-family: 'Orbitron', sans-serif; font-size: 0.78rem; font-weight: 700; text-align: center; color: var(--text); }
         @media (max-width: 620px) { .app-name { font-size: 0.62rem; } }
-        .app-desc { font-size: 0.62rem; color: var(--text-dim); text-align: center; line-height: 1.3; }
+        .app-desc { font-size: 0.62rem; color: var(--text-dim); text-align: center; }
         @media (max-width: 620px) { .app-desc { display: none; } }
-
-        .app-card[data-app="bauth"] { border-color: rgba(0, 240, 255, 0.4); box-shadow: 0 0 15px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.05); }
-        .app-card[data-app="bauth"] .app-icon { background: rgba(0, 240, 255, 0.15); border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 12px rgba(0, 240, 255, 0.4); }
-        .app-card[data-app="bgenpass"] { border-color: rgba(0, 255, 136, 0.4); box-shadow: 0 0 15px rgba(0, 255, 136, 0.2), inset 0 0 20px rgba(0, 255, 136, 0.05); }
-        .app-card[data-app="bgenpass"] .app-icon { background: rgba(0, 255, 136, 0.15); border-color: var(--green); color: var(--green); box-shadow: 0 0 12px rgba(0, 255, 136, 0.4); }
-        .app-card[data-app="bkeepnotes"] { border-color: rgba(255, 183, 3, 0.4); box-shadow: 0 0 15px rgba(255, 183, 3, 0.2), inset 0 0 20px rgba(255, 183, 3, 0.05); }
-        .app-card[data-app="bkeepnotes"] .app-icon { background: rgba(255, 183, 3, 0.15); border-color: var(--yellow); color: var(--yellow); box-shadow: 0 0 12px rgba(255, 183, 3, 0.4); }
-        .app-card[data-app="bpgp"] { border-color: rgba(212, 175, 55, 0.4); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2), inset 0 0 20px rgba(212, 175, 55, 0.05); }
-        .app-card[data-app="bpgp"] .app-icon { background: rgba(212, 175, 55, 0.15); border-color: #d4af37; color: #d4af37; box-shadow: 0 0 12px rgba(212, 175, 55, 0.4); }
-        .app-card[data-app="bstegano"] { border-color: rgba(168, 85, 247, 0.4); box-shadow: 0 0 15px rgba(168, 85, 247, 0.2), inset 0 0 20px rgba(168, 85, 247, 0.05); }
-        .app-card[data-app="bstegano"] .app-icon { background: rgba(168, 85, 247, 0.15); border-color: var(--violet); color: var(--violet); box-shadow: 0 0 12px rgba(168, 85, 247, 0.4); }
+        .app-card[data-app="bauth"] .app-icon { background: rgba(0, 240, 255, 0.15); border-color: var(--cyan); color: var(--cyan); }
+        .app-card[data-app="bgenpass"] .app-icon { background: rgba(0, 255, 136, 0.15); border-color: var(--green); color: var(--green); }
+        .app-card[data-app="bkeepnotes"] .app-icon { background: rgba(255, 183, 3, 0.15); border-color: var(--yellow); color: var(--yellow); }
+        .app-card[data-app="bpgp"] .app-icon { background: rgba(212, 175, 55, 0.15); border-color: #d4af37; color: #d4af37; }
+        .app-card[data-app="bstegano"] .app-icon { background: rgba(168, 85, 247, 0.15); border-color: var(--violet); color: var(--violet); }
 
         /* ===== HUB FOOTER ===== */
         .hub-footer {
@@ -520,31 +664,26 @@
             box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
         }
 
-        /* ===== APP CONTAINER ===== */
         .app-container { display: none; width: 100%; height: 100%; position: fixed; inset: 0; background: var(--bg); z-index: 500; }
         .app-container.active { display: block; }
         .app-iframe { width: 100%; height: 100%; border: none; background: transparent; display: block; }
 
-        /* ===== BOUTON MAISON ===== */
         .home-btn {
             position: fixed; bottom: max(14px, env(safe-area-inset-bottom, 14px)); left: 14px; width: 36px; height: 36px;
             border-radius: 50%; background: linear-gradient(135deg, rgba(0, 240, 255, 0.15) 0%, rgba(168, 85, 247, 0.2) 100%);
             border: 1px solid rgba(168, 85, 247, 0.35); color: rgba(0, 240, 255, 0.5); display: none;
             align-items: center; justify-content: center; cursor: pointer; z-index: 9999;
-            backdrop-filter: blur(6px); box-shadow: 0 0 10px rgba(168, 85, 247, 0.25);
-            transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
-            -webkit-tap-highlight-color: transparent; touch-action: manipulation; padding: 0;
+            backdrop-filter: blur(6px); padding: 0;
         }
         .home-btn.visible { display: flex; animation: homeBtnBlink 4s ease-in-out infinite; }
         @keyframes homeBtnBlink {
-            0% { opacity: 0.15; box-shadow: 0 0 4px rgba(0, 240, 255, 0.1); }
-            50% { opacity: 0.9; box-shadow: 0 0 16px rgba(0, 240, 255, 0.4), 0 0 25px rgba(168, 85, 247, 0.7); border-color: rgba(168, 85, 247, 0.6); }
-            100% { opacity: 0.15; box-shadow: 0 0 4px rgba(0, 240, 255, 0.1); }
+            0% { opacity: 0.15; }
+            50% { opacity: 0.9; box-shadow: 0 0 16px rgba(0, 240, 255, 0.4); }
+            100% { opacity: 0.15; }
         }
-        .home-btn:hover, .home-btn:active { animation: none !important; opacity: 1; background: linear-gradient(135deg, #00f0ff 0%, #a855f7 100%); color: #fff; border-color: transparent; transform: scale(1.15); box-shadow: 0 0 20px rgba(168, 85, 247, 0.7), 0 0 30px rgba(0, 240, 255, 0.5); }
-        .home-btn svg { width: 15px; height: 15px; pointer-events: none; }
+        .home-btn:hover, .home-btn:active { animation: none !important; opacity: 1; background: linear-gradient(135deg, #00f0ff 0%, #a855f7 100%); color: #fff; transform: scale(1.15); }
+        .home-btn svg { width: 15px; height: 15px; }
 
-        /* ===== SPLASH ===== */
         .splash {
             position: fixed; inset: 0; background: var(--bg); z-index: 99999;
             display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px;
@@ -555,9 +694,8 @@
             font-family: 'Orbitron', sans-serif; font-size: clamp(2rem, 8vw, 3rem); font-weight: 900;
             background: linear-gradient(135deg, #00f0ff 0%, #a855f7 50%, #ff0055 100%);
             background-size: 200% 200%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: 6px; animation: titleShift 3s ease-in-out infinite, splashGlow 1s ease-in-out infinite alternate;
+            letter-spacing: 6px; animation: titleShift 3s ease-in-out infinite;
         }
-        @keyframes splashGlow { from { filter: drop-shadow(0 0 15px rgba(0, 240, 255, 0.6)); } to { filter: drop-shadow(0 0 35px rgba(168, 85, 247, 0.9)); } }
         .splash-bar { width: 200px; height: 3px; background: rgba(100, 100, 100, 0.3); border-radius: 3px; overflow: hidden; }
         .splash-bar-fill { height: 100%; width: 0%; background: var(--grad-primary); animation: loadBar 1.2s ease-out forwards; }
         @keyframes loadBar { 0% { width: 0%; } 100% { width: 100%; } }
@@ -566,29 +704,28 @@
         .app-loader.active { display: flex; }
         .app-loader-spinner { width: 50px; height: 50px; border: 3px solid rgba(0, 240, 255, 0.2); border-top-color: var(--cyan); border-radius: 50%; animation: spin 0.8s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        .app-loader-text { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--cyan); letter-spacing: 2px; text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+        .app-loader-text { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: var(--cyan); letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <!-- ===== CALCULATRICE DE CAMOUFLAGE ===== -->
-<div id="calculator-disguise">
+<!-- ============================================================ -->
+<!-- CALCULATRICE iOS                                              -->
+<!-- ============================================================ -->
+<div id="calculator-disguise-ios">
     <div class="calc-wrapper">
-        <!-- Affichage à deux lignes : expression + résultat -->
         <div class="calc-display-container">
             <div class="calc-expression" id="calc-expression"></div>
             <div class="calc-display" id="calc-display">0</div>
         </div>
-
-        <!-- Barre d'actions : Historique + Effacer (juste en dessous du résultat, alignés à droite) -->
         <div class="calc-action-bar">
-            <button type="button" class="calc-icon-btn" onclick="toggleCalcHistory()" title="Historique" aria-label="Historique">
+            <button type="button" class="calc-icon-btn" onclick="toggleCalcHistory()" title="Historique">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
             </button>
-            <button type="button" class="calc-icon-btn" onclick="calcBackspace()" title="Effacer" aria-label="Effacer le dernier caractère">
+            <button type="button" class="calc-icon-btn" onclick="calcBackspace()" title="Effacer">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
                     <line x1="18" y1="9" x2="12" y2="15"></line>
@@ -596,36 +733,28 @@
                 </svg>
             </button>
         </div>
-
-        <!-- Clavier -->
         <div class="calc-keypad">
             <button type="button" class="calc-btn clear" onclick="calcClear()">AC</button>
             <button type="button" class="calc-btn clear" onclick="calcToggleSign()">+/-</button>
             <button type="button" class="calc-btn clear" onclick="calcPercent()">%</button>
             <button type="button" class="calc-btn op" onclick="calcOp('/')">÷</button>
-            
             <button type="button" class="calc-btn" onclick="calcNum('7')">7</button>
             <button type="button" class="calc-btn" onclick="calcNum('8')">8</button>
             <button type="button" class="calc-btn" onclick="calcNum('9')">9</button>
             <button type="button" class="calc-btn op" onclick="calcOp('*')">×</button>
-            
             <button type="button" class="calc-btn" onclick="calcNum('4')">4</button>
             <button type="button" class="calc-btn" onclick="calcNum('5')">5</button>
             <button type="button" class="calc-btn" onclick="calcNum('6')">6</button>
             <button type="button" class="calc-btn op" onclick="calcOp('-')">-</button>
-            
             <button type="button" class="calc-btn" onclick="calcNum('1')">1</button>
             <button type="button" class="calc-btn" onclick="calcNum('2')">2</button>
             <button type="button" class="calc-btn" onclick="calcNum('3')">3</button>
             <button type="button" class="calc-btn op" onclick="calcOp('+')">+</button>
-            
             <button type="button" class="calc-btn zero" onclick="calcNum('0')">0</button>
             <button type="button" class="calc-btn" onclick="calcNum(',')">,</button>
             <button type="button" class="calc-btn op" onclick="calcEquals()">=</button>
         </div>
     </div>
-
-    <!-- Panneau historique (coulissant depuis le bas) -->
     <div class="calc-history-panel" id="calc-history-panel">
         <div class="calc-history-header">
             <span>Historique</span>
@@ -635,117 +764,227 @@
     </div>
 </div>
 
-<!-- ===== CALCULATRICE SCIENTIFIQUE MODALE ===== -->
-<div class="sci-modal" id="sci-modal">
-    <div class="sci-content">
-        <div class="sci-display" id="sci-display">0</div>
-        <div class="sci-keypad">
-            <button class="clear" onclick="sciClear()">C</button>
-            <button onclick="sciInput('(')">(</button>
-            <button onclick="sciInput(')')">)</button>
-            <button class="op" onclick="sciInput('/')">÷</button>
-            
-            <button onclick="sciInput('sin(')">sin</button>
-            <button onclick="sciInput('cos(')">cos</button>
-            <button onclick="sciInput('tan(')">tan</button>
-            <button class="op" onclick="sciInput('*')">×</button>
-            
-            <button onclick="sciInput('log(')">log</button>
-            <button onclick="sciInput('ln(')">ln</button>
-            <button onclick="sciInput('sqrt(')">√</button>
-            <button class="op" onclick="sciInput('-')">-</button>
-            
-            <button onclick="sciInput('7')">7</button>
-            <button onclick="sciInput('8')">8</button>
-            <button onclick="sciInput('9')">9</button>
-            <button class="op" onclick="sciInput('+')">+</button>
-            
-            <button onclick="sciInput('4')">4</button>
-            <button onclick="sciInput('5')">5</button>
-            <button onclick="sciInput('6')">6</button>
-            <button class="op" onclick="sciInput('^')">^</button>
-            
-            <button onclick="sciInput('1')">1</button>
-            <button onclick="sciInput('2')">2</button>
-            <button onclick="sciInput('3')">3</button>
-            <button class="op" onclick="sciInput('pi')">π</button>
-            
-            <button onclick="sciInput('0')">0</button>
-            <button onclick="sciInput('.')">.</button>
-            <button class="op" onclick="sciInput('e')">e</button>
-            <button class="op" onclick="sciCalc()">=</button>
+<!-- ============================================================ -->
+<!-- CALCULATRICE ANDROID (Material You)                          -->
+<!-- ============================================================ -->
+<div id="calculator-disguise-android">
+
+    <div class="android-topbar">
+        <button class="android-topbar-btn" id="android-history-trigger" onclick="toggleCalcHistory()" aria-label="Historique">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+            </svg>
+        </button>
+        <button class="android-topbar-btn" onclick="androidShowMenu(event)" aria-label="Menu">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="5" r="1.9"/>
+                <circle cx="12" cy="12" r="1.9"/>
+                <circle cx="12" cy="19" r="1.9"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="android-display-area">
+        <div class="android-line muted" id="android-calc-expression"></div>
+        <div class="android-line primary" id="android-calc-display">0</div>
+    </div>
+
+    <div class="android-chevron-wrapper">
+        <button class="android-chevron-btn" id="android-chevron-btn" onclick="androidToggleScientific()">
+            <svg id="android-chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="7 15 12 20 17 15"/>
+                <polyline points="7 9 12 4 17 9"/>
+            </svg>
+        </button>
+    </div>
+
+    <div class="android-keypad" id="android-keypad-normal">
+        <button class="android-btn ac" onclick="calcClear()">AC</button>
+        <button class="android-btn parens" onclick="calcParens()">( )</button>
+        <button class="android-btn op" onclick="calcPercent()">%</button>
+        <button class="android-btn op" onclick="calcOp('/')">÷</button>
+        <button class="android-btn num" onclick="calcNum('7')">7</button>
+        <button class="android-btn num" onclick="calcNum('8')">8</button>
+        <button class="android-btn num" onclick="calcNum('9')">9</button>
+        <button class="android-btn op" onclick="calcOp('*')">×</button>
+        <button class="android-btn num" onclick="calcNum('4')">4</button>
+        <button class="android-btn num" onclick="calcNum('5')">5</button>
+        <button class="android-btn num" onclick="calcNum('6')">6</button>
+        <button class="android-btn op" onclick="calcOp('-')">−</button>
+        <button class="android-btn num" onclick="calcNum('1')">1</button>
+        <button class="android-btn num" onclick="calcNum('2')">2</button>
+        <button class="android-btn num" onclick="calcNum('3')">3</button>
+        <button class="android-btn op" onclick="calcOp('+')">+</button>
+        <button class="android-btn num" onclick="calcNum('0')">0</button>
+        <button class="android-btn num comma" onclick="calcNum(',')">,</button>
+        <button class="android-btn backspace" onclick="calcBackspace()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+                <line x1="18" y1="9" x2="12" y2="15"/>
+                <line x1="12" y1="9" x2="18" y2="15"/>
+            </svg>
+        </button>
+        <button class="android-btn equals" onclick="calcEquals()">
+               <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round">
+                       <line x1="5" y1="9" x2="19" y2="9"/>
+                       <line x1="5" y1="15" x2="19" y2="15"/>
+                </svg>
+        </button>
+     </div>
+
+    <div class="android-keypad android-keypad-scientific" id="android-keypad-scientific" style="display:none;">
+        <button class="android-btn sci" onclick="calcSciFunc('sqrt')">√</button>
+        <button class="android-btn sci" onclick="calcSciFunc('pi')">π</button>
+        <button class="android-btn sci" onclick="calcSciFunc('pow')">^</button>
+        <button class="android-btn sci" onclick="calcSciFunc('fact')">!</button>
+        <button class="android-btn sci" id="android-deg-btn" onclick="calcSciFunc('deg')">Deg</button>
+        <button class="android-btn sci" onclick="calcSciFunc('sin')">sin</button>
+        <button class="android-btn sci" onclick="calcSciFunc('cos')">cos</button>
+        <button class="android-btn sci" onclick="calcSciFunc('tan')">tan</button>
+        <button class="android-btn sci" id="android-inv-btn" onclick="calcSciFunc('inv')">Inv</button>
+        <button class="android-btn sci" onclick="calcSciFunc('e')">e</button>
+        <button class="android-btn sci" onclick="calcSciFunc('ln')">ln</button>
+        <button class="android-btn sci" onclick="calcSciFunc('log')">log</button>
+        <button class="android-btn ac" onclick="calcClear()">AC</button>
+        <button class="android-btn parens" onclick="calcParens()">( )</button>
+        <button class="android-btn op" onclick="calcPercent()">%</button>
+        <button class="android-btn op" onclick="calcOp('/')">÷</button>
+        <button class="android-btn num" onclick="calcNum('7')">7</button>
+        <button class="android-btn num" onclick="calcNum('8')">8</button>
+        <button class="android-btn num" onclick="calcNum('9')">9</button>
+        <button class="android-btn op" onclick="calcOp('*')">×</button>
+        <button class="android-btn num" onclick="calcNum('4')">4</button>
+        <button class="android-btn num" onclick="calcNum('5')">5</button>
+        <button class="android-btn num" onclick="calcNum('6')">6</button>
+        <button class="android-btn op" onclick="calcOp('-')">−</button>
+        <button class="android-btn num" onclick="calcNum('1')">1</button>
+        <button class="android-btn num" onclick="calcNum('2')">2</button>
+        <button class="android-btn num" onclick="calcNum('3')">3</button>
+        <button class="android-btn op" onclick="calcOp('+')">+</button>
+        <button class="android-btn num" onclick="calcNum('0')">0</button>
+        <button class="android-btn num comma" onclick="calcNum(',')">,</button>
+        <button class="android-btn backspace" onclick="calcBackspace()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/>
+                <line x1="18" y1="9" x2="12" y2="15"/>
+                <line x1="12" y1="9" x2="18" y2="15"/>
+            </svg>
+        </button>
+        <button class="android-btn equals" onclick="calcEquals()">
+    <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round">
+        <line x1="5" y1="9.5" x2="19" y2="9.5"/>
+        <line x1="5" y1="14.5" x2="19" y2="14.5"/>
+    </svg>
+</button>
+    </div>
+
+    <div class="android-history-sheet" id="android-history-sheet">
+        <div class="history-drag-handle"></div>
+        <div class="history-title-row">
+            <span>Expression actuelle</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 12 15 18 9"/>
+            </svg>
         </div>
-        <button class="sci-close-btn" onclick="closeScientificCalc()">Fermer</button>
+        <div class="history-list" id="android-calc-history-list"></div>
+    </div>
+
+    <div id="android-menu-popup" onclick="androidCloseMenu()" style="display:none; position:fixed; inset:0; z-index:100002;">
+        <div onclick="event.stopPropagation()" id="android-menu-card" style="position:absolute; top:52px; right:12px; border-radius:12px; padding:6px 0; min-width:220px; box-shadow:0 8px 24px rgba(0,0,0,0.25);">
+            <div class="android-menu-item" id="android-menu-theme" onclick="androidToggleTheme(); androidCloseMenu();">
+                <svg class="android-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                </svg>
+                <span id="android-menu-theme-label">Thème clair</span>
+            </div>
+            <div class="android-menu-item" onclick="toggleCalcHistory(); androidCloseMenu();">
+                <svg class="android-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                    <path d="M3 3v5h5"/>
+                </svg>
+                <span>Historique</span>
+            </div>
+            <div class="android-menu-item" onclick="clearCalcHistory(); androidCloseMenu();">
+                <svg class="android-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 6h18M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+                <span>Effacer l'historique</span>
+            </div>
+        </div>
     </div>
 </div>
 
-    <!-- ===== SPLASH SCREEN ===== -->
-    <div class="splash hidden" id="splash">
-        <div class="splash-logo">B SUITE</div>
-        <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+<!-- ===== SPLASH SCREEN ===== -->
+<div class="splash hidden" id="splash">
+    <div class="splash-logo">B SUITE</div>
+    <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+
+<!-- ===== HUB ===== -->
+<div class="hub-container" id="hub">
+    <div class="particles-bg">
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div><div class="particle"></div><div class="particle"></div>
     </div>
-
-    <!-- ===== HUB ===== -->
-    <div class="hub-container" id="hub">
-        <div class="particles-bg">
-            <div class="particle"></div><div class="particle"></div><div class="particle"></div>
-            <div class="particle"></div><div class="particle"></div><div class="particle"></div>
+    <div class="hub-logo">
+        <h1>B SUITE</h1>
+        <div class="hub-subtitle">// SECURITY TOOLKIT //</div>
+    </div>
+    <div class="apps-grid">
+        <div class="app-card" data-app="bauth" onclick="loadApp('bauth')">
+            <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bauth')" aria-label="Informations">ℹ</button>
+            <div class="app-icon">🔐</div><div class="app-name">B AUTH</div><div class="app-desc">Codes TOTP 2FA</div>
         </div>
-        <div class="hub-logo">
-            <h1>B SUITE</h1>
-            <div class="hub-subtitle">// SECURITY TOOLKIT //</div>
+        <div class="app-card" data-app="bgenpass" onclick="loadApp('bgenpass')">
+            <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bgenpass')" aria-label="Informations">ℹ</button>
+            <div class="app-icon">🔑</div><div class="app-name">B GEN PASS</div><div class="app-desc">Mots de passe sécurisés</div>
         </div>
-        <div class="apps-grid">
-            <div class="app-card" data-app="bauth" onclick="loadApp('bauth')">
-                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bauth')" aria-label="Informations">ℹ</button>
-                <div class="app-icon">🔐</div><div class="app-name">B AUTH</div><div class="app-desc">Codes TOTP 2FA</div>
-            </div>
-            <div class="app-card" data-app="bgenpass" onclick="loadApp('bgenpass')">
-                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bgenpass')" aria-label="Informations">ℹ</button>
-                <div class="app-icon">🔑</div><div class="app-name">B GEN PASS</div><div class="app-desc">Mots de passe sécurisés</div>
-            </div>
-            <div class="app-card" data-app="bkeepnotes" onclick="loadApp('bkeepnotes')">
-                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bkeepnotes')" aria-label="Informations">ℹ</button>
-                <div class="app-icon">📝</div><div class="app-name">B KEEP NOTES</div><div class="app-desc">Notes chiffrées & coffre</div>
-            </div>
-            <div class="app-card" data-app="bpgp" onclick="loadApp('bpgp')">
-                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bpgp')" aria-label="Informations">ℹ</button>
-                <div class="app-icon">🛡️</div><div class="app-name">B PGP</div><div class="app-desc">Chiffrement & façade</div>
-            </div>
-            <div class="app-card" data-app="bstegano" onclick="loadApp('bstegano')">
-                <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bstegano')" aria-label="Informations">ℹ</button>
-                <div class="app-icon">🖼️</div><div class="app-name">B STEGANO</div><div class="app-desc">Stéganographie & EXIF</div>
-            </div>
+        <div class="app-card" data-app="bkeepnotes" onclick="loadApp('bkeepnotes')">
+            <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bkeepnotes')" aria-label="Informations">ℹ</button>
+            <div class="app-icon">📝</div><div class="app-name">B KEEP NOTES</div><div class="app-desc">Notes chiffrées & coffre</div>
         </div>
-
-        <!-- ===== FOOTER ===== -->
-        <div class="hub-footer">
-            B Suite © 2024 - <a href="https://bstudio136.github.io/mylink/" target="_blank" rel="noopener noreferrer">Bstudio136</a>
+        <div class="app-card" data-app="bpgp" onclick="loadApp('bpgp')">
+            <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bpgp')" aria-label="Informations">ℹ</button>
+            <div class="app-icon">🛡️</div><div class="app-name">B PGP</div><div class="app-desc">Chiffrement & façade</div>
         </div>
-
-        <div class="info-modal-overlay" id="info-modal" onclick="closeInfoModal(event)">
-            <div class="info-modal-box" onclick="event.stopPropagation()">
-                <h3 id="info-modal-title">// INFO</h3>
-                <p id="info-modal-text">Description de l'application...</p>
-                <button class="modal-btn" onclick="closeInfoModal()">FERMER</button>
-            </div>
+        <div class="app-card" data-app="bstegano" onclick="loadApp('bstegano')">
+            <button class="info-btn" onclick="event.stopPropagation(); openInfoModal('bstegano')" aria-label="Informations">ℹ</button>
+            <div class="app-icon">🖼️</div><div class="app-name">B STEGANO</div><div class="app-desc">Stéganographie & EXIF</div>
         </div>
     </div>
 
-    <!-- ===== APP CONTAINER ===== -->
-    <div class="app-container" id="app-container">
-        <div class="app-loader" id="app-loader">
-            <div class="app-loader-spinner"></div>
-            <div class="app-loader-text" id="app-loader-text">CHARGEMENT...</div>
-        </div>
-        <iframe class="app-iframe" id="app-iframe" src="about:blank" allow="clipboard-read; clipboard-write; camera; microphone; fullscreen; geolocation"></iframe>
+    <!-- ===== FOOTER ===== -->
+    <div class="hub-footer">
+        B Suite © 2024 - <a href="https://bstudio136.github.io/mylink/" target="_blank" rel="noopener noreferrer">Bstudio136</a>
     </div>
 
-    <button class="home-btn" id="home-btn" onclick="goBack()" title="Retour au menu" aria-label="Retour au menu principal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/>
-        </svg>
-    </button>
+    <div class="info-modal-overlay" id="info-modal" onclick="closeInfoModal(event)">
+        <div class="info-modal-box" onclick="event.stopPropagation()">
+            <h3 id="info-modal-title">// INFO</h3>
+            <p id="info-modal-text">Description de l'application...</p>
+            <button class="modal-btn" onclick="closeInfoModal()">FERMER</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== APP CONTAINER ===== -->
+<div class="app-container" id="app-container">
+    <div class="app-loader" id="app-loader">
+        <div class="app-loader-spinner"></div>
+        <div class="app-loader-text" id="app-loader-text">CHARGEMENT...</div>
+    </div>
+    <iframe class="app-iframe" id="app-iframe" src="about:blank" allow="clipboard-read; clipboard-write; camera; microphone; fullscreen; geolocation"></iframe>
+</div>
+
+<button class="home-btn" id="home-btn" onclick="goBack()" title="Retour au menu">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/>
+    </svg>
+</button>
+
+<!-- ============================================================ -->
 
     <!-- ============================================================ -->
     <!-- TEMPLATES DES 5 APPS -->
@@ -2671,19 +2910,7 @@
     <title>Bpgp - Chiffrement & Façade Sécurisée</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        gold: {
-                            100: '#FAF4DC', 200: '#F4E6AF', 300: '#EBD57E', 400: '#DFBE4D',
-                            500: '#D4AF37', 600: '#B89326', 700: '#91711A', 800: '#695110', 900: '#433309'
-                        }
-                    }
-                }
-            }
-        }
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { gold: { 100: '#FAF4DC', 200: '#F4E6AF', 300: '#EBD57E', 400: '#DFBE4D', 500: '#D4AF37', 600: '#B89326', 700: '#91711A', 800: '#695110', 900: '#433309' } } } } }
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -2698,14 +2925,11 @@
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100 min-h-screen transition-colors duration-300 flex justify-center items-center">
-
     <div class="w-full max-w-md h-screen md:h-[880px] bg-white dark:bg-zinc-900 md:rounded-3xl shadow-2xl flex flex-col justify-between overflow-hidden relative border border-gray-200 dark:border-zinc-800">
-        
         <div id="toast" class="absolute top-16 left-1/2 -translate-x-1/2 bg-zinc-900/90 dark:bg-zinc-100/90 text-white dark:text-zinc-900 text-xs font-semibold px-4 py-2.5 rounded-full shadow-lg border border-gold-500/40 opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
             <i data-lucide="check-circle-2" class="w-4 h-4 text-gold-500"></i>
             <span id="toast-message">Notification</span>
         </div>
-
         <header class="px-5 py-4 border-b border-gray-200 dark:border-zinc-800 flex justify-between items-center bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md sticky top-0 z-40">
             <div class="flex items-center gap-2.5">
                 <div class="w-10 h-10 rounded-xl gold-bg-gradient flex items-center justify-center shadow-lg shadow-gold-500/20">
@@ -2716,7 +2940,6 @@
                     <p class="text-[10px] text-gray-500 dark:text-zinc-400 -mt-1 font-medium tracking-wider uppercase">Vault & Disguise</p>
                 </div>
             </div>
-
             <div class="flex items-center gap-2">
                 <button onclick="triggerPanicPurge()" title="Purge Rapide de Secours" class="p-2.5 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white hover:scale-105 active:scale-95 transition-all flex items-center justify-center">
                     <i data-lucide="eraser" class="w-5 h-5"></i>
@@ -2727,125 +2950,79 @@
                 </button>
             </div>
         </header>
-
         <main class="flex-1 overflow-y-auto p-5 custom-scrollbar pb-24">
-
             <section id="view-home" class="space-y-6">
                 <div class="text-center py-4">
-                    <span class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-gold-500/10 text-gold-600 dark:text-gold-400 border border-gold-500/20 mb-2">
-                        Cryptographie Indétectable
-                    </span>
-                    <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                        Protéger vos secrets en toute discrétion
-                    </h2>
-                    <p class="text-xs text-gray-500 dark:text-zinc-400 mt-1 max-w-xs mx-auto">
-                        Chiffrez vos messages avec une clé ultra-sécurisée ou dissimulez-les sous une fausse apparence.
-                    </p>
+                    <span class="inline-block px-3 py-1 rounded-full text-[11px] font-semibold bg-gold-500/10 text-gold-600 dark:text-gold-400 border border-gold-500/20 mb-2">Cryptographie Indétectable</span>
+                    <h2 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Protéger vos secrets en toute discrétion</h2>
+                    <p class="text-xs text-gray-500 dark:text-zinc-400 mt-1 max-w-xs mx-auto">Chiffrez vos messages avec une clé ultra-sécurisée ou dissimulez-les sous une fausse apparence.</p>
                 </div>
-
                 <div onclick="switchView('encrypt'); switchTab('code');" class="group relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-zinc-800/80 dark:to-zinc-800/30 p-5 rounded-2xl border border-gray-200 dark:border-zinc-700/60 hover:border-gold-500/50 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-gold-500/5">
                     <div class="flex items-start gap-4">
-                        <div class="p-3 rounded-xl bg-gold-500/10 text-gold-600 dark:text-gold-400 group-hover:bg-gold-500 group-hover:text-zinc-950 transition-colors">
-                            <i data-lucide="lock" class="w-6 h-6"></i>
-                        </div>
+                        <div class="p-3 rounded-xl bg-gold-500/10 text-gold-600 dark:text-gold-400 group-hover:bg-gold-500 group-hover:text-zinc-950 transition-colors"><i data-lucide="lock" class="w-6 h-6"></i></div>
                         <div class="flex-1">
                             <div class="flex justify-between items-center">
                                 <h3 class="font-bold text-gray-900 dark:text-white text-base">Créer un code 🔐</h3>
                                 <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform"></i>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-zinc-400 mt-1 leading-relaxed">
-                                Transformez vos messages en code chiffré AES-256 avec sel aléatoire et 263 000 itérations PBKDF2.
-                            </p>
+                            <p class="text-xs text-gray-500 dark:text-zinc-400 mt-1 leading-relaxed">Transformez vos messages en code chiffré AES-256 avec sel aléatoire et 263 000 itérations PBKDF2.</p>
                         </div>
                     </div>
                 </div>
-
                 <div onclick="switchView('encrypt'); switchTab('facade');" class="group relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-zinc-800/80 dark:to-zinc-800/30 p-5 rounded-2xl border border-gray-200 dark:border-zinc-700/60 hover:border-gold-500/50 cursor-pointer transition-all duration-300 hover:shadow-xl hover:shadow-gold-500/5">
                     <div class="flex items-start gap-4">
-                        <div class="p-3 rounded-xl bg-gold-500/10 text-gold-600 dark:text-gold-400 group-hover:bg-gold-500 group-hover:text-zinc-950 transition-colors">
-                            <i data-lucide="theater" class="w-6 h-6"></i>
-                        </div>
+                        <div class="p-3 rounded-xl bg-gold-500/10 text-gold-600 dark:text-gold-400 group-hover:bg-gold-500 group-hover:text-zinc-950 transition-colors"><i data-lucide="theater" class="w-6 h-6"></i></div>
                         <div class="flex-1">
                             <div class="flex justify-between items-center">
                                 <h3 class="font-bold text-gray-900 dark:text-white text-base">Créer une façade 🎭</h3>
                                 <i data-lucide="chevron-right" class="w-4 h-4 text-gray-400 group-hover:translate-x-1 transition-transform"></i>
                             </div>
-                            <p class="text-xs text-gray-500 dark:text-zinc-400 mt-1 leading-relaxed">
-                                Dissimulez vos textes confidentiels derrière une fausse conversation anodine (Football, Resto, Travail).
-                            </p>
+                            <p class="text-xs text-gray-500 dark:text-zinc-400 mt-1 leading-relaxed">Dissimulez vos textes confidentiels derrière une fausse conversation anodine (Football, Resto, Travail).</p>
                         </div>
                     </div>
                 </div>
-
                 <div class="p-4 rounded-xl bg-gold-500/5 border border-gold-500/20 text-center">
                     <div class="flex items-center justify-center gap-2 text-gold-600 dark:text-gold-400 font-semibold text-xs">
-                        <i data-lucide="shield-alert" class="w-4 h-4"></i>
-                        <span>Clé obligatoire : ≥ 24 car. • Sel aléatoire <br>• 263 000 itérations</span>
+                        <i data-lucide="shield-alert" class="w-4 h-4"></i><span>Clé obligatoire : ≥ 24 car. • Sel aléatoire <br>• 263 000 itérations</span>
                     </div>
                 </div>
             </section>
-
             <section id="view-encrypt" class="space-y-5 hidden">
                 <div class="flex p-1 bg-gray-100 dark:bg-zinc-800 rounded-xl border border-gray-200 dark:border-zinc-700">
-                    <button id="subtab-code-btn" onclick="switchTab('code')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 shadow-sm">
-                        🔐 Code Chiffré
-                    </button>
-                    <button id="subtab-facade-btn" onclick="switchTab('facade')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white">
-                        🎭 Façade Invisible
-                    </button>
+                    <button id="subtab-code-btn" onclick="switchTab('code')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 shadow-sm">🔐 Code Chiffré</button>
+                    <button id="subtab-facade-btn" onclick="switchTab('facade')" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white">🎭 Façade Invisible</button>
                 </div>
-
                 <div class="space-y-1.5">
                     <div class="flex justify-between items-center">
-                        <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300 flex items-center gap-1.5">
-                            <i data-lucide="key-round" class="w-3.5 h-3.5 text-gold-500"></i>
-                            Clé de Sécurité (≥ 24 car.)
-                        </label>
+                        <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300 flex items-center gap-1.5"><i data-lucide="key-round" class="w-3.5 h-3.5 text-gold-500"></i> Clé de Sécurité (≥ 24 car.)</label>
                         <span id="key-length-counter" class="text-[10px] text-gray-400 font-mono">0 / 24</span>
                     </div>
                     <div class="relative flex items-center">
-                        <input type="text" id="sec-key-input" oninput="validateKeyInput()" placeholder="Entrez ou générez au moins 24 caractères..." 
-                            class="w-full pl-3 pr-20 py-2.5 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs font-mono text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors">
+                        <input type="text" id="sec-key-input" oninput="validateKeyInput()" placeholder="Entrez ou générez au moins 24 caractères..." class="w-full pl-3 pr-20 py-2.5 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs font-mono text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors">
                         <div class="absolute right-1.5 flex items-center gap-0.5">
-                            <button onclick="generateStrongKey()" title="Générer une clé" class="p-1.5 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg text-gold-500 transition-colors">
-                                <i data-lucide="sparkles" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="copyToClipboard('sec-key-input', 'Clé copiée !')" title="Copier la clé" class="p-1.5 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg text-gray-500 dark:text-zinc-400 hover:text-gold-500 transition-colors">
-                                <i data-lucide="copy" class="w-4 h-4"></i>
-                            </button>
+                            <button onclick="generateStrongKey()" title="Générer une clé" class="p-1.5 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg text-gold-500 transition-colors"><i data-lucide="sparkles" class="w-4 h-4"></i></button>
+                            <button onclick="copyToClipboard('sec-key-input', 'Clé copiée !')" title="Copier la clé" class="p-1.5 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg text-gray-500 dark:text-zinc-400 hover:text-gold-500 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button>
                         </div>
                     </div>
-                    <p id="key-error-msg" class="text-[10px] text-red-500 font-medium hidden flex items-center gap-1">
-                        <i data-lucide="alert-circle" class="w-3 h-3"></i> La clé doit contenir au moins 24 caractères.
-                    </p>
+                    <p id="key-error-msg" class="text-[10px] text-red-500 font-medium hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> La clé doit contenir au moins 24 caractères.</p>
                 </div>
-
                 <div id="tab-code-content" class="space-y-4">
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300">Message secret à cacher</label>
-                        <textarea id="secret-msg-input" rows="3" placeholder="Saisissez votre message confidentiel ici..." 
-                            class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
+                        <textarea id="secret-msg-input" rows="3" placeholder="Saisissez votre message confidentiel ici..." class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
                     </div>
-
                     <button onclick="handleEncryptCode()" class="w-full py-3 rounded-xl gold-bg-gradient text-zinc-950 font-bold text-xs tracking-wide shadow-lg shadow-gold-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="lock" class="w-4 h-4"></i>
-                        Chiffrer le Message
+                        <i data-lucide="lock" class="w-4 h-4"></i> Chiffrer le Message
                     </button>
-
                     <div id="code-output-container" class="hidden space-y-1.5 pt-2">
-                        <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300 flex justify-between items-center">
-                            <span>Code Sécurisé Généré :</span>
-                        </label>
+                        <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300 flex justify-between items-center"><span>Code Sécurisé Généré :</span></label>
                         <div class="relative">
-                            <textarea id="code-output-text" readonly rows="4" class="w-full p-3 pr-10 bg-zinc-950 text-gold-400 border border-gold-500/30 rounded-xl text-xs font-mono resize-none focus:outline-none"></textarea>
-                            <button onclick="copyToClipboard('code-output-text', 'Code chiffré copié !')" class="absolute top-2.5 right-2.5 p-1.5 bg-zinc-800 hover:bg-zinc-700 text-gold-400 rounded-lg transition-colors">
-                                <i data-lucide="copy" class="w-4 h-4"></i>
-                            </button>
+                            <textarea id="code-output-text" readonly rows="3" class="w-full p-3 pr-10 bg-zinc-950 text-gold-400 border border-gold-500/30 rounded-xl text-xs font-mono resize-none focus:outline-none"></textarea>
+                            <button onclick="copyToClipboard('code-output-text', 'Code chiffré copié !')" class="absolute top-2.5 right-2.5 p-1.5 bg-zinc-800 hover:bg-zinc-700 text-gold-400 rounded-lg transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button>
                         </div>
                         <p class="text-[10px] text-gray-400 italic">Format : <code class="text-gold-500">selHex:cipher</code> — le sel change à chaque chiffrement.</p>
                     </div>
                 </div>
-
                 <div id="tab-facade-content" class="space-y-4 hidden">
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300">Sujet de couverture (Thème)</label>
@@ -2854,27 +3031,20 @@
                             <option value="foot">⚽ Match de Football / Sport</option>
                             <option value="work">💼 Réunion / Travail</option>
                             <option value="weather">☀️ Météo / Week-end</option>
-                            <option value="custom">✏️ Texte Personnalisé (Taper votre propre texte...)</option>
+                            <option value="custom">✏️ Texte Personnalisé</option>
                         </select>
                     </div>
-
                     <div id="custom-facade-container" class="space-y-1.5 hidden">
                         <label class="text-xs font-semibold text-gold-600 dark:text-gold-400">Votre texte de couverture personnalisé</label>
-                        <textarea id="custom-facade-input" rows="2" placeholder="Tapez ou collez ici n'importe quel texte banal (article, e-mail, extrait)..." 
-                            class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gold-500/40 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
+                        <textarea id="custom-facade-input" rows="2" placeholder="Tapez ici n'importe quel texte banal..." class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gold-500/40 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
                     </div>
-
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300">Message secret à dissimuler</label>
-                        <textarea id="facade-secret-input" rows="3" placeholder="Ce texte sera dissimulé sous forme de caractères invisibles..." 
-                            class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
+                        <textarea id="facade-secret-input" rows="3" placeholder="Ce texte sera dissimulé sous forme de caractères invisibles..." class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
                     </div>
-
                     <button onclick="handleEncryptFacade()" class="w-full py-3 rounded-xl gold-bg-gradient text-zinc-950 font-bold text-xs tracking-wide shadow-lg shadow-gold-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="theater" class="w-4 h-4"></i>
-                        Générer le Message Façade
+                        <i data-lucide="theater" class="w-4 h-4"></i> Générer le Message Façade
                     </button>
-
                     <div id="facade-output-container" class="hidden space-y-1.5 pt-2">
                         <div class="flex justify-between items-center">
                             <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300">Résultat Façade (Message Inoffensif) :</label>
@@ -2882,98 +3052,55 @@
                         </div>
                         <div class="relative">
                             <textarea id="facade-output-text" readonly rows="3" class="w-full p-3 pr-10 bg-gray-100 dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs text-gray-900 dark:text-zinc-100 resize-none focus:outline-none font-sans"></textarea>
-                            <button onclick="copyToClipboard('facade-output-text', 'Message façade copié !')" class="absolute top-2.5 right-2.5 p-1.5 bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gold-600 dark:text-gold-400 rounded-lg transition-colors">
-                                <i data-lucide="copy" class="w-4 h-4"></i>
-                            </button>
+                            <button onclick="copyToClipboard('facade-output-text', 'Message façade copié !')" class="absolute top-2.5 right-2.5 p-1.5 bg-gray-200 dark:bg-zinc-700 hover:bg-gray-300 dark:hover:bg-zinc-600 text-gold-600 dark:text-gold-400 rounded-lg transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button>
                         </div>
                         <p class="text-[10px] text-gray-400 italic">Vous pouvez copier et envoyer ce texte normal par SMS ou WhatsApp. Le secret y est encodé de façon totalement invisible.</p>
                     </div>
                 </div>
             </section>
-
             <section id="view-decrypt" class="space-y-5 hidden">
                 <div class="text-center py-2">
                     <h2 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white">Révéler un Message</h2>
                     <p class="text-xs text-gray-500 dark:text-zinc-400 mt-0.5">Collez un code chiffré ou une phrase façade pour révéler le secret.</p>
                 </div>
-
                 <div class="space-y-1.5">
-                    <div class="flex justify-between items-center">
-                        <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300">Message Chiffré ou Texte Façade</label>
-                    </div>
-                    <textarea id="decrypt-input" rows="4" placeholder="Appui long ici pour coller le texte codé..." 
-                        class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
+                    <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300">Message Chiffré ou Texte Façade</label>
+                    <textarea id="decrypt-input" rows="4" placeholder="Appui long ici pour coller le texte codé..." class="w-full p-3 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors resize-none"></textarea>
                 </div>
-
                 <div class="space-y-1.5">
                     <div class="flex justify-between items-center">
-                        <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300 flex items-center gap-1.5">
-                            <i data-lucide="key-round" class="w-3.5 h-3.5 text-gold-500"></i>
-                            Clé de Sécurité (≥ 24 car.)
-                        </label>
+                        <label class="text-xs font-semibold text-gray-700 dark:text-zinc-300 flex items-center gap-1.5"><i data-lucide="key-round" class="w-3.5 h-3.5 text-gold-500"></i> Clé de Sécurité (≥ 24 car.)</label>
                         <span id="decrypt-key-length-counter" class="text-[10px] text-gray-400 font-mono">0 / 24</span>
                     </div>
                     <div class="relative flex items-center">
-                        <input type="text" id="decrypt-sec-key-input" oninput="validateDecryptKeyInput()" placeholder="Entrez la clé de 24 caractères minimum..." 
-                            class="w-full pl-3 pr-10 py-2.5 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs font-mono text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors">
-                        <button onclick="copyToClipboard('decrypt-sec-key-input', 'Clé copiée !')" title="Copier la clé" class="absolute right-1.5 p-1.5 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg text-gray-500 dark:text-zinc-400 hover:text-gold-500 transition-colors">
-                            <i data-lucide="copy" class="w-4 h-4"></i>
-                        </button>
+                        <input type="text" id="decrypt-sec-key-input" oninput="validateDecryptKeyInput()" placeholder="Entrez la clé de 24 caractères minimum..." class="w-full pl-3 pr-10 py-2.5 bg-gray-50 dark:bg-zinc-800/70 border border-gray-300 dark:border-zinc-700 rounded-xl text-xs font-mono text-gray-900 dark:text-zinc-100 focus:outline-none focus:border-gold-500 transition-colors">
+                        <button onclick="copyToClipboard('decrypt-sec-key-input', 'Clé copiée !')" class="absolute right-1.5 p-1.5 hover:bg-gray-200 dark:hover:bg-zinc-700 rounded-lg text-gray-500 dark:text-zinc-400 hover:text-gold-500 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button>
                     </div>
-                    <p id="decrypt-key-error-msg" class="text-[10px] text-red-500 font-medium hidden flex items-center gap-1">
-                        <i data-lucide="alert-circle" class="w-3 h-3"></i> La clé doit contenir au moins 24 caractères.
-                    </p>
+                    <p id="decrypt-key-error-msg" class="text-[10px] text-red-500 font-medium hidden flex items-center gap-1"><i data-lucide="alert-circle" class="w-3 h-3"></i> La clé doit contenir au moins 24 caractères.</p>
                 </div>
-
                 <button onclick="handleDecrypt()" class="w-full py-3 rounded-xl gold-bg-gradient text-zinc-950 font-bold text-xs tracking-wide shadow-lg shadow-gold-500/20 active:scale-95 transition-all flex items-center justify-center gap-2">
-                    <i data-lucide="unlock" class="w-4 h-4"></i>
-                    Déchiffrer & Révéler
+                    <i data-lucide="unlock" class="w-4 h-4"></i> Déchiffrer & Révéler
                 </button>
-
                 <div id="decrypt-output-container" class="hidden space-y-1.5 pt-2">
                     <div class="flex justify-between items-center">
-                        <label class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
-                            <i data-lucide="check-circle" class="w-4 h-4"></i>
-                            Message Déchiffré :
-                        </label>
-                        <button onclick="copyToClipboard('decrypt-output-text', 'Message déchiffré copié !')" class="p-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg transition-colors flex items-center gap-1 text-[11px] font-medium">
-                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                            Copier
-                        </button>
+                        <label class="text-xs font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5"><i data-lucide="check-circle" class="w-4 h-4"></i> Message Déchiffré :</label>
+                        <button onclick="copyToClipboard('decrypt-output-text', 'Message déchiffré copié !')" class="p-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 rounded-lg transition-colors flex items-center gap-1 text-[11px] font-medium"><i data-lucide="copy" class="w-3.5 h-3.5"></i> Copier</button>
                     </div>
                     <div class="relative">
                         <div id="decrypt-output-text" class="w-full p-3 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-500/30 rounded-xl text-xs text-gray-900 dark:text-emerald-200 font-medium whitespace-pre-wrap break-words min-h-[80px]"></div>
                     </div>
                 </div>
             </section>
-
         </main>
-
         <nav class="absolute bottom-0 left-0 right-0 h-16 bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-t border-gray-200 dark:border-zinc-800 px-6 flex justify-around items-center z-40">
-            <button id="nav-home" onclick="switchView('home')" class="flex flex-col items-center gap-1 text-gold-500 font-semibold transition-colors">
-                <i data-lucide="home" class="w-5 h-5"></i>
-                <span class="text-[10px]">Accueil</span>
-            </button>
-            <button id="nav-encrypt" onclick="switchView('encrypt')" class="flex flex-col items-center gap-1 text-gray-400 dark:text-zinc-500 hover:text-gold-500 transition-colors">
-                <i data-lucide="lock" class="w-5 h-5"></i>
-                <span class="text-[10px]">Chiffrer</span>
-            </button>
-            <button id="nav-decrypt" onclick="switchView('decrypt')" class="flex flex-col items-center gap-1 text-gray-400 dark:text-zinc-500 hover:text-gold-500 transition-colors">
-                <i data-lucide="unlock" class="w-5 h-5"></i>
-                <span class="text-[10px]">Déchiffrer</span>
-            </button>
+            <button id="nav-home" onclick="switchView('home')" class="flex flex-col items-center gap-1 text-gold-500 font-semibold transition-colors"><i data-lucide="home" class="w-5 h-5"></i><span class="text-[10px]">Accueil</span></button>
+            <button id="nav-encrypt" onclick="switchView('encrypt')" class="flex flex-col items-center gap-1 text-gray-400 dark:text-zinc-500 hover:text-gold-500 transition-colors"><i data-lucide="lock" class="w-5 h-5"></i><span class="text-[10px]">Chiffrer</span></button>
+            <button id="nav-decrypt" onclick="switchView('decrypt')" class="flex flex-col items-center gap-1 text-gray-400 dark:text-zinc-500 hover:text-gold-500 transition-colors"><i data-lucide="unlock" class="w-5 h-5"></i><span class="text-[10px]">Déchiffrer</span></button>
         </nav>
-
     </div>
-
     <script>
-        let currentView = 'home';
-        let currentTab = 'code';
-
-        window.onload = function() {
-            lucide.createIcons();
-            initTheme();
-        };
+        let currentView = 'home', currentTab = 'code';
+        window.onload = function() { lucide.createIcons(); initTheme(); };
 
         const PBKDF2_ITERATIONS = 263000;
         const SALT_BYTES = 16;
@@ -2991,7 +3118,6 @@
             if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(''); }
             showToast("🚨 Purge complète effectuée !");
         }
-
         function deriveKeyPBKDF2(passphrase, saltHex) {
             const salt = CryptoJS.enc.Hex.parse(saltHex);
             const key256Bits = CryptoJS.PBKDF2(passphrase, salt, {
@@ -3001,35 +3127,28 @@
             });
             return key256Bits.toString();
         }
-
         function generateRandomSaltHex() {
             const cryptoObj = window.crypto || window.msCrypto;
             const randomBytes = new Uint8Array(SALT_BYTES);
             cryptoObj.getRandomValues(randomBytes);
             return Array.from(randomBytes).map(b => b.toString(16).padStart(2, '0')).join('');
         }
-
         function toggleCustomFacadeInput() {
             const selectVal = document.getElementById('facade-topic-select').value;
-            const customContainer = document.getElementById('custom-facade-container');
-            if (selectVal === 'custom') { customContainer.classList.remove('hidden'); }
-            else { customContainer.classList.add('hidden'); }
+            document.getElementById('custom-facade-container').classList.toggle('hidden', selectVal !== 'custom');
         }
-
         function switchView(viewName) {
             currentView = viewName;
             document.getElementById('view-home').classList.add('hidden');
             document.getElementById('view-encrypt').classList.add('hidden');
             document.getElementById('view-decrypt').classList.add('hidden');
-            const navItems = ['home', 'encrypt', 'decrypt'];
-            navItems.forEach(item => {
-                const btn = document.getElementById(`nav-${item}`);
+            ['home', 'encrypt', 'decrypt'].forEach(item => {
+                const btn = document.getElementById('nav-' + item);
                 btn.className = "flex flex-col items-center gap-1 text-gray-400 dark:text-zinc-500 hover:text-gold-500 transition-colors";
             });
-            document.getElementById(`view-${viewName}`).classList.remove('hidden');
-            document.getElementById(`nav-${viewName}`).className = "flex flex-col items-center gap-1 text-gold-500 font-semibold transition-colors";
+            document.getElementById('view-' + viewName).classList.remove('hidden');
+            document.getElementById('nav-' + viewName).className = "flex flex-col items-center gap-1 text-gold-500 font-semibold transition-colors";
         }
-
         function switchTab(tabName) {
             currentTab = tabName;
             const codeBtn = document.getElementById('subtab-code-btn');
@@ -3039,117 +3158,62 @@
             if (tabName === 'code') {
                 codeBtn.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 shadow-sm";
                 facadeBtn.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white";
-                codeContent.classList.remove('hidden');
-                facadeContent.classList.add('hidden');
+                codeContent.classList.remove('hidden'); facadeContent.classList.add('hidden');
             } else {
                 facadeBtn.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-zinc-900 dark:text-white bg-white dark:bg-zinc-900 shadow-sm";
                 codeBtn.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-white";
-                facadeContent.classList.remove('hidden');
-                codeContent.classList.add('hidden');
+                facadeContent.classList.remove('hidden'); codeContent.classList.add('hidden');
             }
         }
-
         function initTheme() {
-            if (localStorage.theme === 'light') {
-                document.documentElement.classList.remove('dark');
-                document.getElementById('theme-icon-dark').classList.remove('hidden');
-                document.getElementById('theme-icon-light').classList.add('hidden');
-            } else {
-                document.documentElement.classList.add('dark');
-                document.getElementById('theme-icon-light').classList.remove('hidden');
-                document.getElementById('theme-icon-dark').classList.add('hidden');
-            }
+            if (localStorage.theme === 'light') { document.documentElement.classList.remove('dark'); document.getElementById('theme-icon-dark').classList.remove('hidden'); document.getElementById('theme-icon-light').classList.add('hidden'); }
+            else { document.documentElement.classList.add('dark'); document.getElementById('theme-icon-light').classList.remove('hidden'); document.getElementById('theme-icon-dark').classList.add('hidden'); }
         }
-
         function toggleTheme() {
-            if (document.documentElement.classList.contains('dark')) {
-                document.documentElement.classList.remove('dark');
-                localStorage.theme = 'light';
-                document.getElementById('theme-icon-dark').classList.remove('hidden');
-                document.getElementById('theme-icon-light').classList.add('hidden');
-            } else {
-                document.documentElement.classList.add('dark');
-                localStorage.theme = 'dark';
-                document.getElementById('theme-icon-light').classList.remove('hidden');
-                document.getElementById('theme-icon-dark').classList.add('hidden');
-            }
+            if (document.documentElement.classList.contains('dark')) { document.documentElement.classList.remove('dark'); localStorage.theme = 'light'; document.getElementById('theme-icon-dark').classList.remove('hidden'); document.getElementById('theme-icon-light').classList.add('hidden'); }
+            else { document.documentElement.classList.add('dark'); localStorage.theme = 'dark'; document.getElementById('theme-icon-light').classList.remove('hidden'); document.getElementById('theme-icon-dark').classList.add('hidden'); }
         }
-
         function validateKeyInput() {
             const keyInput = document.getElementById('sec-key-input').value;
             const counter = document.getElementById('key-length-counter');
             const errorMsg = document.getElementById('key-error-msg');
-            counter.textContent = `${keyInput.length} / 24`;
-            if (keyInput.length > 0 && keyInput.length < 24) {
-                errorMsg.classList.remove('hidden');
-                counter.classList.add('text-red-500');
-            } else {
-                errorMsg.classList.add('hidden');
-                counter.classList.remove('text-red-500');
-            }
+            counter.textContent = keyInput.length + ' / 24';
+            if (keyInput.length > 0 && keyInput.length < 24) { errorMsg.classList.remove('hidden'); counter.classList.add('text-red-500'); }
+            else { errorMsg.classList.add('hidden'); counter.classList.remove('text-red-500'); }
         }
-
         function validateDecryptKeyInput() {
             const keyInput = document.getElementById('decrypt-sec-key-input').value;
             const counter = document.getElementById('decrypt-key-length-counter');
             const errorMsg = document.getElementById('decrypt-key-error-msg');
-            counter.textContent = `${keyInput.length} / 24`;
-            if (keyInput.length > 0 && keyInput.length < 24) {
-                errorMsg.classList.remove('hidden');
-                counter.classList.add('text-red-500');
-            } else {
-                errorMsg.classList.add('hidden');
-                counter.classList.remove('text-red-500');
-            }
+            counter.textContent = keyInput.length + ' / 24';
+            if (keyInput.length > 0 && keyInput.length < 24) { errorMsg.classList.remove('hidden'); counter.classList.add('text-red-500'); }
+            else { errorMsg.classList.add('hidden'); counter.classList.remove('text-red-500'); }
         }
-
         function generateStrongKey() {
             const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=";
             let result = "";
-            const cryptoObj = window.crypto || window.msCrypto;
             const randomValues = new Uint32Array(32);
-            cryptoObj.getRandomValues(randomValues);
+            window.crypto.getRandomValues(randomValues);
             for (let i = 0; i < 32; i++) { result += charset[randomValues[i] % charset.length]; }
             document.getElementById('sec-key-input').value = result;
             validateKeyInput();
             showToast("Clé de 32 car. générée !");
         }
-
-        const ZW_ZERO = '\u200B';
-        const ZW_ONE = '\u200C';
-        const ZW_SEP = '\u200D';
-
+        const ZW_ZERO = '\u200B', ZW_ONE = '\u200C', ZW_SEP = '\u200D';
         function textToZeroWidth(text) {
-            return text.split('').map(char => {
-                return char.charCodeAt(0).toString(2).padStart(8, '0')
-                    .split('')
-                    .map(bit => bit === '0' ? ZW_ZERO : ZW_ONE)
-                    .join('');
-            }).join(ZW_SEP);
+            return text.split('').map(char => char.charCodeAt(0).toString(2).padStart(8, '0').split('').map(bit => bit === '0' ? ZW_ZERO : ZW_ONE).join('')).join(ZW_SEP);
         }
-
         function zeroWidthToText(zwText) {
             const zwChars = zwText.replace(/[^\u200B\u200C\u200D]/g, '');
             if (!zwChars) return '';
-            const charBlocks = zwChars.split(ZW_SEP);
-            return charBlocks.map(block => {
+            return zwChars.split(ZW_SEP).map(block => {
                 if (!block) return '';
                 const binaryStr = block.split('').map(ch => ch === ZW_ZERO ? '0' : '1').join('');
                 return String.fromCharCode(parseInt(binaryStr, 2));
             }).join('');
         }
-
-        const FAÇADE_TEMPLATES = {
-            resto: "Salut, est-ce que tu es disponible ce soir pour se faire une bonne pizza vers 20h ? Dis-moi si ça te convient !",
-            foot: "N'oublie pas le match de ce soir à 21h. On se retrouve tous chez Thomas pour regarder la seconde mi-temps !",
-            work: "Bonjour, j'ai mis à jour le compte-rendu de la réunion. Merci de vérifier les fichiers joints dès que possible.",
-            weather: "Quel temps magnifique prévu pour ce week-end ! Tu as prévu de sortir un peu profiter du soleil ?"
-        };
-
-        function packCipher(saltHex, cipher) {
-            return saltHex + ':' + cipher;
-        }
-
+        const FAÇADE_TEMPLATES = { resto: "Salut, est-ce que tu es disponible ce soir pour se faire une bonne pizza vers 20h ? Dis-moi si ça te convient !", foot: "N'oublie pas le match de ce soir à 21h. On se retrouve tous chez Thomas pour regarder la seconde mi-temps !", work: "Bonjour, j'ai mis à jour le compte-rendu de la réunion. Merci de vérifier les fichiers joints dès que possible.", weather: "Quel temps magnifique prévu pour ce week-end ! Tu as prévu de sortir un peu profiter du soleil ?" };
+        function packCipher(saltHex, cipher) { return saltHex + ':' + cipher; }
         function unpackCipher(input) {
             const trimmed = input.trim();
             const idx = trimmed.indexOf(':');
@@ -3159,7 +3223,6 @@
             if (!/^[0-9a-fA-F]+$/.test(saltHex) || saltHex.length !== SALT_BYTES * 2) return null;
             return { saltHex, cipher };
         }
-
         function handleEncryptCode() {
             const rawKey = document.getElementById('sec-key-input').value;
             const message = document.getElementById('secret-msg-input').value;
@@ -3175,7 +3238,6 @@
                 showToast("Message chiffré avec succès !");
             } catch (e) { console.error(e); showToast("Erreur lors du chiffrement."); }
         }
-
         function handleEncryptFacade() {
             const rawKey = document.getElementById('sec-key-input').value;
             const message = document.getElementById('facade-secret-input').value;
@@ -3193,15 +3255,12 @@
                 let coverText = FAÇADE_TEMPLATES[topic] || FAÇADE_TEMPLATES.resto;
                 if (topic === 'custom' && customCoverText.trim()) { coverText = customCoverText.trim(); }
                 const firstSpaceIndex = coverText.indexOf(' ');
-                const disguisedFacadeMessage = firstSpaceIndex !== -1 
-                    ? coverText.slice(0, firstSpaceIndex) + invisibleHiddenCipher + coverText.slice(firstSpaceIndex)
-                    : coverText + invisibleHiddenCipher;
+                const disguisedFacadeMessage = firstSpaceIndex !== -1 ? coverText.slice(0, firstSpaceIndex) + invisibleHiddenCipher + coverText.slice(firstSpaceIndex) : coverText + invisibleHiddenCipher;
                 document.getElementById('facade-output-text').value = disguisedFacadeMessage;
                 document.getElementById('facade-output-container').classList.remove('hidden');
                 showToast("Façade générée avec succès !");
             } catch (e) { console.error(e); showToast("Erreur lors de la génération."); }
         }
-
         function handleDecrypt() {
             const inputData = document.getElementById('decrypt-input').value;
             const rawKey = document.getElementById('decrypt-sec-key-input').value;
@@ -3220,59 +3279,32 @@
                 const derivedKey = deriveKeyPBKDF2(rawKey, unpacked.saltHex);
                 const bytes = CryptoJS.AES.decrypt(unpacked.cipher, derivedKey);
                 const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
-                if (!decryptedText) {
-                    showToast("Clé incorrecte ou données corrompues !");
-                    document.getElementById('decrypt-output-container').classList.add('hidden');
-                    return;
-                }
+                if (!decryptedText) { showToast("Clé incorrecte ou données corrompues !"); document.getElementById('decrypt-output-container').classList.add('hidden'); return; }
                 document.getElementById('decrypt-output-text').textContent = decryptedText;
                 document.getElementById('decrypt-output-container').classList.remove('hidden');
                 showToast("Message déchiffré avec succès !");
-            } catch (e) {
-                console.error(e);
-                showToast("Échec du déchiffrement. Clé invalide.");
-                document.getElementById('decrypt-output-container').classList.add('hidden');
-            }
+            } catch (e) { console.error(e); showToast("Échec du déchiffrement. Clé invalide."); document.getElementById('decrypt-output-container').classList.add('hidden'); }
         }
-
         async function copyToClipboard(elementId, successText) {
             const el = document.getElementById(elementId);
             let textToCopy = el.value || el.textContent;
             if (!textToCopy) return;
-            try {
-                if (navigator.clipboard && navigator.clipboard.writeText) {
-                    await navigator.clipboard.writeText(textToCopy);
-                    showToast(successText || "Copié dans le presse-papier !");
-                    return;
-                }
-            } catch (err) { console.warn("Clipboard API failed, trying fallback", err); }
+            try { if (navigator.clipboard && navigator.clipboard.writeText) { await navigator.clipboard.writeText(textToCopy); showToast(successText || "Copié !"); return; } } catch (err) {}
             try {
                 const textArea = document.createElement("textarea");
-                textArea.value = textToCopy;
-                textArea.style.position = "fixed";
-                textArea.style.top = "0";
-                textArea.style.left = "0";
-                textArea.style.opacity = "0";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
+                textArea.value = textToCopy; textArea.style.position = "fixed"; textArea.style.top = "0"; textArea.style.left = "0"; textArea.style.opacity = "0";
+                document.body.appendChild(textArea); textArea.focus(); textArea.select();
                 const successful = document.execCommand('copy');
                 document.body.removeChild(textArea);
-                if (successful) { showToast(successText || "Copié dans le presse-papier !"); }
-                else { showToast("Erreur de copie"); }
+                if (successful) { showToast(successText || "Copié !"); } else { showToast("Erreur de copie"); }
             } catch (e) { showToast("Impossible de copier"); }
         }
-
         function showToast(msg) {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            toastMsg.textContent = msg;
+            document.getElementById('toast-message').textContent = msg;
             toast.classList.remove('opacity-0', 'pointer-events-none');
             toast.classList.add('opacity-100');
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0', 'pointer-events-none');
-            }, 2500);
+            setTimeout(() => { toast.classList.remove('opacity-100'); toast.classList.add('opacity-0', 'pointer-events-none'); }, 2500);
         }
     </script>
 </body>
@@ -4324,23 +4356,98 @@
 </html>
     </template>
 
-    <!-- ============================================================ -->
-<!-- SCRIPT PRINCIPAL ET LOGIQUE DE LA CALCULATRICE               -->
+<!-- ============================================================ -->
+<!-- SCRIPT PRINCIPAL                                              -->
 <!-- ============================================================ -->
 <script>
-    /* ==========================================
-       LOGIQUE DE LA CALCULATRICE LEURRE
-       ========================================== */
-    let calcCurrent = '0';
-    let calcPrev = null;
-    let currentOperation = null;
-    let calcWait = false;
-    let justEvaluated = false;
-    let lastExpressionText = '';
+    /* ============================================================
+       DÉTECTION DE PLATEFORME + THÈME
+       ============================================================ */
+    let activeCalcPlatform = 'ios';
+
+    function detectPlatform() {
+        const ua = navigator.userAgent || '';
+        const uad = navigator.userAgentData;
+        const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = !isIOS && (
+            /android/i.test(ua) ||
+            (uad && /android/i.test(uad.platform || ''))
+        );
+        return { isIOS, isAndroid };
+    }
+
+    function getSavedAndroidTheme() {
+        const saved = localStorage.getItem('calc_android_theme');
+        if (saved === 'light' || saved === 'dark') return saved;
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+    }
+
+    function applyAndroidTheme(theme) {
+        const androidCalc = document.getElementById('calculator-disguise-android');
+        if (!androidCalc) return;
+        if (theme === 'light') {
+            androidCalc.classList.add('theme-light');
+        } else {
+            androidCalc.classList.remove('theme-light');
+        }
+        localStorage.setItem('calc_android_theme', theme);
+
+        const label = document.getElementById('android-menu-theme-label');
+        if (label) {
+            label.textContent = theme === 'light' ? 'Thème sombre' : 'Thème clair';
+        }
+        const themeColorMeta = document.getElementById('theme-color-meta');
+        if (themeColorMeta && activeCalcPlatform === 'android') {
+            themeColorMeta.setAttribute('content', theme === 'light' ? '#faf5fc' : '#1A1A1E');
+        }
+    }
+
+    function androidToggleTheme() {
+        const current = localStorage.getItem('calc_android_theme') || getSavedAndroidTheme();
+        const next = current === 'light' ? 'dark' : 'light';
+        applyAndroidTheme(next);
+    }
+
+    function applyCalcTheme() {
+        const { isAndroid } = detectPlatform();
+        activeCalcPlatform = isAndroid ? 'android' : 'ios';
+
+        const iosCalc = document.getElementById('calculator-disguise-ios');
+        const androidCalc = document.getElementById('calculator-disguise-android');
+        const themeColorMeta = document.getElementById('theme-color-meta');
+        const faviconLink = document.getElementById('favicon-link');
+        const appleIconLink = document.getElementById('apple-icon-link');
+
+        if (isAndroid) {
+            iosCalc.classList.remove('active');
+            androidCalc.classList.add('active');
+            applyAndroidTheme(getSavedAndroidTheme());
+            if (faviconLink) faviconLink.setAttribute('href', 'Sources/icon-android.png');
+            if (appleIconLink) appleIconLink.setAttribute('href', 'Sources/icon-android.png');
+        } else {
+            androidCalc.classList.remove('active');
+            iosCalc.classList.add('active');
+            if (themeColorMeta) themeColorMeta.setAttribute('content', '#000000');
+            if (faviconLink) faviconLink.setAttribute('href', 'Sources/icon-ios.png');
+            if (appleIconLink) appleIconLink.setAttribute('href', 'Sources/icon-ios.png');
+        }
+
+        updateCalcDisplay();
+    }
+
+    /* ============================================================
+       ÉTAT
+       ============================================================ */
+    let calcExpr = '';
+    let calcJustEvaluated = false;
+    let calcLastResult = '';
     let secretBuffer = '';
     let equalsCount = 0;
+    let degMode = true;
+    let invMode = false;
+    let androidScientificMode = false;
 
-    /* Historique factice de la calculatrice */
     let calcHistory = [
         { expr: '12+35', result: '47' },
         { expr: '8×9', result: '72' },
@@ -4351,235 +4458,450 @@
         { expr: '230+470', result: '700' }
     ];
 
-    function getOpSymbol(op) {
-        return { '+': '+', '-': '-', '*': '×', '/': '÷' }[op] || '';
+    /* ============================================================
+       FORMATAGE FR
+       ============================================================ */
+    function formatFR(value) {
+        if (value === null || value === undefined || value === '') return '0';
+        if (value === 'Erreur' || value === '∞' || value === '-∞') return value;
+        let s = String(value);
+        let neg = false;
+        if (s.startsWith('-')) { neg = true; s = s.slice(1); }
+        const parts = s.split('.');
+        const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        let result = intPart;
+        if (parts[1] !== undefined && parts[1] !== '') result += ',' + parts[1];
+        return (neg ? '-' : '') + result;
     }
 
-    function formatCalcNumber(n) {
-        if (n === null || n === undefined) return '';
-        return String(n);
-    }
-
-    function buildExpressionText() {
-        if (justEvaluated) return lastExpressionText;
-        let parts = [];
-        if (calcPrev !== null) {
-            parts.push(formatCalcNumber(calcPrev));
-            if (currentOperation) parts.push(getOpSymbol(currentOperation));
-            if (!calcWait) parts.push(calcCurrent);
+    function formatFRNumber(num) {
+        if (num === null || num === undefined) return '0';
+        if (typeof num === 'number') {
+            if (!isFinite(num)) return num > 0 ? '∞' : '-∞';
+            if (isNaN(num)) return 'Erreur';
+            const rounded = Math.round(num * 1e10) / 1e10;
+            return formatFR(String(rounded));
         }
-        return parts.join('');
+        return formatFR(num);
     }
 
+    /* ============================================================
+       PARSEUR D'EXPRESSION
+       ============================================================ */
+    function normalizeExpr(raw) {
+        let s = String(raw);
+        s = s.replace(/×/g, '*');
+        s = s.replace(/÷/g, '/');
+        s = s.replace(/−/g, '-');
+        s = s.replace(/,/g, '.');
+        s = s.replace(/π/g, 'PI');
+        s = s.replace(/√/g, 'sqrt');
+        s = s.replace(/\^/g, '**');
+        s = s.replace(/(\d)\s*\(/g, '$1*(');
+        s = s.replace(/\)\s*(\d)/g, ')*$1');
+        s = s.replace(/\)\s*\(/g, ')*(');
+        s = s.replace(/(\d)\s*(PI|E|sin|cos|tan|asin|acos|atan|ln|log|sqrt)/g, '$1*$2');
+        s = s.replace(/(PI|E|\))\s*(PI|E|sin|cos|tan|asin|acos|atan|ln|log|sqrt)/g, '$1*$2');
+        for (let i = 0; i < 5; i++) {
+            s = s.replace(/(\d+)!/g, 'fact($1)');
+        }
+        s = s.replace(/\)!/g, ')');
+        const openCount = (s.match(/\(/g) || []).length;
+        const closeCount = (s.match(/\)/g) || []).length;
+        if (openCount > closeCount) s += ')'.repeat(openCount - closeCount);
+        return s;
+    }
+
+    function evaluateExpression(raw) {
+        if (!raw || !raw.trim()) return null;
+        const s = normalizeExpr(raw);
+        try {
+            const fn = new Function(
+                'PI', 'E', 'sin', 'cos', 'tan', 'asin', 'acos', 'atan',
+                'ln', 'log', 'sqrt', 'fact',
+                '"use strict"; return (' + s + ');'
+            );
+            const result = fn(
+                Math.PI, Math.E,
+                x => degMode ? Math.sin(x * Math.PI / 180) : Math.sin(x),
+                x => degMode ? Math.cos(x * Math.PI / 180) : Math.cos(x),
+                x => degMode ? Math.tan(x * Math.PI / 180) : Math.tan(x),
+                x => degMode ? Math.asin(x) * 180 / Math.PI : Math.asin(x),
+                x => degMode ? Math.acos(x) * 180 / Math.PI : Math.acos(x),
+                x => degMode ? Math.atan(x) * 180 / Math.PI : Math.atan(x),
+                Math.log, Math.log10, Math.sqrt,
+                n => {
+                    if (n < 0 || n !== Math.floor(n) || n > 170) return NaN;
+                    let r = 1;
+                    for (let i = 2; i <= n; i++) r *= i;
+                    return r;
+                }
+            );
+            return result;
+        } catch (e) { return null; }
+    }
+
+    /* ============================================================
+       AFFICHAGE
+       ============================================================ */
     function updateCalcDisplay() {
-        const display = document.getElementById('calc-display');
-        const exprEl = document.getElementById('calc-expression');
-        if (display) display.textContent = String(calcCurrent).replace('.', ',');
-        if (exprEl) exprEl.textContent = buildExpressionText().replace(/\./g, ',');
+        const isAndroid = activeCalcPlatform === 'android';
+        const displayId = isAndroid ? 'android-calc-display' : 'calc-display';
+        const exprId    = isAndroid ? 'android-calc-expression' : 'calc-expression';
+        const display = document.getElementById(displayId);
+        const exprEl  = document.getElementById(exprId);
+        if (!display || !exprEl) return;
+
+        if (isAndroid) {
+            updateAndroidDisplay(display, exprEl);
+        } else {
+            updateIosDisplay(display, exprEl);
+        }
     }
 
-    function calcNum(num) {
-        if (num === ',') num = '.'; // Normalize comma to dot for calculation
-
-        if (justEvaluated) {
-            calcPrev = null;
-            currentOperation = null;
-            justEvaluated = false;
-            lastExpressionText = '';
-            calcCurrent = '0';
-            calcWait = false;
+    function updateAndroidDisplay(display, exprEl) {
+        if (calcJustEvaluated) {
+            exprEl.textContent = calcExpr || '';
+            exprEl.className = 'android-line muted';
+            display.textContent = formatFR(calcLastResult);
+            display.className = 'android-line primary';
+            return;
         }
 
-        if (calcWait) {
-            calcCurrent = (num === '.') ? '0.' : num;
-            calcWait = false;
+        if (!calcExpr) {
+            exprEl.textContent = '';
+            exprEl.className = 'android-line muted';
+            display.textContent = '0';
+            display.className = 'android-line primary';
+            return;
+        }
+
+        const hasOperator = /[+\-×÷−()^!√πe]/.test(calcExpr);
+        if (!hasOperator) {
+            exprEl.textContent = '';
+            exprEl.className = 'android-line muted';
+            display.textContent = formatFR(calcExpr);
+            display.className = 'android-line primary';
+            return;
+        }
+
+        exprEl.textContent = calcExpr;
+        exprEl.className = 'android-line primary';
+
+        const cleaned = calcExpr.replace(/[+\-×÷−]+$/, '').replace(/\($/, '');
+        const evaluated = cleaned ? evaluateExpression(cleaned) : null;
+        if (evaluated !== null && isFinite(evaluated)) {
+            display.textContent = formatFRNumber(evaluated);
         } else {
-            if (num === '.' && calcCurrent.includes('.')) return;
-            calcCurrent = (calcCurrent === '0' && num !== '.') ? num : calcCurrent + num;
+            const match = calcExpr.match(/[\d.,]+$/);
+            display.textContent = match ? formatFR(match[0]) : '';
         }
+        display.className = 'android-line secondary';
+    }
 
-        if (calcCurrent.length > 12) {
-            calcCurrent = calcCurrent.slice(0, 12);
+    function updateIosDisplay(display, exprEl) {
+        if (calcJustEvaluated) {
+            exprEl.textContent = calcExpr || '';
+            exprEl.style.opacity = '1';
+            display.textContent = formatFR(calcLastResult);
+            return;
         }
+        if (!calcExpr) {
+            exprEl.textContent = '';
+            display.textContent = '0';
+            return;
+        }
+        const hasOperator = /[+\-×÷−()^!√πe]/.test(calcExpr);
+        if (!hasOperator) {
+            exprEl.textContent = '';
+            display.textContent = formatFR(calcExpr);
+            return;
+        }
+        exprEl.textContent = calcExpr;
+        exprEl.style.opacity = '1';
+        const cleaned = calcExpr.replace(/[+\-×÷−]+$/, '').replace(/\($/, '');
+        const evaluated = cleaned ? evaluateExpression(cleaned) : null;
+        if (evaluated !== null && isFinite(evaluated)) {
+            display.textContent = formatFRNumber(evaluated);
+        } else {
+            const match = calcExpr.match(/[\d.,]+$/);
+            display.textContent = match ? formatFR(match[0]) : '0';
+        }
+    }
 
+    /* ============================================================
+       ACTIONS
+       ============================================================ */
+    function calcNum(num) {
+        if (num === ',') num = '.';
+        if (calcJustEvaluated) {
+            calcExpr = '';
+            calcJustEvaluated = false;
+            calcLastResult = '';
+        }
+        const lastNum = (calcExpr.match(/[\d.,]+$/) || [''])[0];
+        if (num === '.' && lastNum.includes('.')) return;
+        if (lastNum === '0' && num !== '.') {
+            calcExpr = calcExpr.slice(0, -1);
+        }
+        calcExpr += num;
         secretBuffer += num;
         if (secretBuffer.length > 15) secretBuffer = secretBuffer.slice(-15);
-
         updateCalcDisplay();
     }
 
     function calcOp(op) {
-        if (justEvaluated) {
-            justEvaluated = false;
-            lastExpressionText = '';
-        } else if (currentOperation !== null && !calcWait) {
-            const current = parseFloat(calcCurrent);
-            let result = 0;
-            switch (currentOperation) {
-                case '+': result = calcPrev + current; break;
-                case '-': result = calcPrev - current; break;
-                case '*': result = calcPrev * current; break;
-                case '/': result = current === 0 ? 0 : calcPrev / current; break;
+        const symbol = { '+': '+', '-': '−', '*': '×', '/': '÷' }[op] || op;
+        if (calcJustEvaluated) {
+            calcExpr = calcLastResult + symbol;
+            calcJustEvaluated = false;
+            calcLastResult = '';
+        } else if (calcExpr === '') {
+            if (op === '-') calcExpr = '−';
+            else return;
+        } else {
+            if (/[+\-×÷−]$/.test(calcExpr)) {
+                calcExpr = calcExpr.replace(/[+\-×÷−]+$/, '');
             }
-            calcCurrent = String(Math.round(result * 100000000) / 100000000);
+            calcExpr += symbol;
         }
-
-        calcPrev = parseFloat(calcCurrent);
-        currentOperation = op;
-        calcWait = true;
         secretBuffer = '';
         equalsCount = 0;
         updateCalcDisplay();
     }
 
     function calcEquals() {
-        /* Code secret : 01360 puis 3 appuis sur '=' */
-        if (secretBuffer.endsWith('01360')) {
-            equalsCount++;
-            if (equalsCount >= 3) {
-                unlockBSuite();
-                return;
-            }
-        } else {
-            equalsCount = 0;
+    const inUnlockSequence = secretBuffer.endsWith('01360');
+
+    if (inUnlockSequence) {
+        equalsCount++;
+        if (equalsCount >= 3) {
+            unlockBSuite();
+            return;
         }
+    } else {
+        equalsCount = 0;
+    }
 
-        if (currentOperation === null || calcWait) return;
+    if (!calcExpr) return;
+    let exprToEval = calcExpr.replace(/[+\-×÷−]+$/, '');
+    if (!exprToEval) return;
 
-        const current = parseFloat(calcCurrent);
-        let result = 0;
-        switch (currentOperation) {
-            case '+': result = calcPrev + current; break;
-            case '-': result = calcPrev - current; break;
-            case '*': result = calcPrev * current; break;
-            case '/': result = current === 0 ? 0 : calcPrev / current; break;
-        }
+    const result = evaluateExpression(exprToEval);
+    if (result === null || !isFinite(result)) {
+        calcLastResult = 'Erreur';
+    } else {
+        const rounded = Math.round(result * 1e10) / 1e10;
+        calcLastResult = String(rounded);
+        addToCalcHistory(exprToEval, calcLastResult);
+    }
+    calcExpr = exprToEval;
+    calcJustEvaluated = true;
 
-        const resultStr = String(Math.round(result * 100000000) / 100000000);
-        const exprStr = formatCalcNumber(calcPrev) + getOpSymbol(currentOperation) + calcCurrent;
-
-        lastExpressionText = exprStr;
-        addToCalcHistory(exprStr, resultStr);
-
-        calcCurrent = resultStr;
-        currentOperation = null;
-        calcPrev = null;
-        calcWait = true;
-        justEvaluated = true;
-        updateCalcDisplay();
-
+    if (!inUnlockSequence) {
         secretBuffer = '';
         equalsCount = 0;
     }
 
+    updateCalcDisplay();
+    }
+
     function calcClear() {
-        calcCurrent = '0';
-        calcPrev = null;
-        currentOperation = null;
-        calcWait = false;
-        justEvaluated = false;
-        lastExpressionText = '';
+        calcExpr = '';
+        calcJustEvaluated = false;
+        calcLastResult = '';
         secretBuffer = '';
         equalsCount = 0;
         updateCalcDisplay();
     }
 
     function calcBackspace() {
-        if (justEvaluated) {
-            /* Après '=', effacer efface tout */
-            calcClear();
-            return;
-        }
-
-        if (calcWait) {
-            /* On annule l'opérateur en cours */
-            currentOperation = null;
-            calcPrev = null;
-            calcWait = false;
-            updateCalcDisplay();
-            return;
-        }
-
-        if (calcCurrent.length > 1) {
-            calcCurrent = calcCurrent.slice(0, -1);
-        } else {
-            calcCurrent = '0';
-        }
+        if (calcJustEvaluated) { calcClear(); return; }
+        if (calcExpr.length > 0) calcExpr = calcExpr.slice(0, -1);
         updateCalcDisplay();
     }
 
     function calcToggleSign() {
-        if (calcCurrent === '0') return;
-        calcCurrent = String(parseFloat(calcCurrent) * -1);
+        if (calcExpr === '') return;
+        if (calcJustEvaluated) {
+            const r = parseFloat(calcLastResult);
+            if (isFinite(r)) {
+                calcLastResult = String(-r);
+                updateCalcDisplay();
+            }
+            return;
+        }
+        const match = calcExpr.match(/(-?)([\d.,]+)$/);
+        if (match) {
+            const [full, sign, num] = match;
+            const newSign = sign === '-' ? '' : '-';
+            calcExpr = calcExpr.slice(0, -full.length) + newSign + num;
+        }
         updateCalcDisplay();
     }
 
     function calcPercent() {
-        if (calcWait) return; // Rien à faire si on attend un nombre
-
-        let current = parseFloat(calcCurrent);
-        
-        // Si une opération est en cours (ex: 200 - 30%)
-        if (calcPrev !== null && currentOperation !== null) {
-            if (currentOperation === '+' || currentOperation === '-') {
-                // Pour l'addition et la soustraction, on calcule le pourcentage de la valeur précédente
-                // Ex: 200 - 30% => 200 - (200 * 30 / 100) = 200 - 60 = 140
-                current = (calcPrev * current) / 100;
-            } else if (currentOperation === '*' || currentOperation === '/') {
-                // Pour la multiplication et la division, on divise simplement par 100
-                // Ex: 200 * 10% => 200 * 0.1 = 20
-                current = current / 100;
+        if (calcExpr === '') return;
+        const match = calcExpr.match(/([\d.,]+)$/);
+        if (match) {
+            const num = match[1];
+            const val = parseFloat(num.replace(',', '.'));
+            if (isFinite(val)) {
+                const pct = Math.round((val / 100) * 1e10) / 1e10;
+                calcExpr = calcExpr.slice(0, -num.length) + String(pct);
             }
-        } else {
-            // Pas d'opération en cours, on divise simplement par 100
-            current = current / 100;
         }
-        
-        // Formater le résultat pour éviter les problèmes de précision flottante
-        calcCurrent = String(Math.round(current * 100000000) / 100000000);
         updateCalcDisplay();
     }
 
-    /* ===== HISTORIQUE CALCULATRICE ===== */
+    function calcParens() {
+        if (calcJustEvaluated) {
+            calcExpr = '';
+            calcJustEvaluated = false;
+            calcLastResult = '';
+        }
+        const openCount = (calcExpr.match(/\(/g) || []).length;
+        const closeCount = (calcExpr.match(/\)/g) || []).length;
+        if (calcExpr === '' || /[+\-×÷−(]$/.test(calcExpr)) {
+            calcExpr += '(';
+        } else if (openCount > closeCount) {
+            calcExpr += ')';
+        } else {
+            calcExpr += '(';
+        }
+        updateCalcDisplay();
+    }
+
+    /* ============================================================
+       FONCTIONS SCIENTIFIQUES
+       ============================================================ */
+    function calcSciFunc(func) {
+        if (calcJustEvaluated) {
+            if (func !== 'deg' && func !== 'inv') {
+                calcExpr = calcLastResult;
+                calcJustEvaluated = false;
+                calcLastResult = '';
+            } else {
+                calcExpr = calcLastResult;
+                calcJustEvaluated = false;
+            }
+        }
+        switch (func) {
+            case 'sqrt': calcExpr += '√('; break;
+            case 'pi':   calcExpr += 'π'; break;
+            case 'e':    calcExpr += 'e'; break;
+            case 'pow':  calcExpr += '^'; break;
+            case 'fact': calcExpr += '!'; break;
+            case 'deg':
+                degMode = !degMode;
+                const degBtn = document.getElementById('android-deg-btn');
+                if (degBtn) {
+                    degBtn.textContent = degMode ? 'Deg' : 'Rad';
+                    degBtn.classList.toggle('active', !degMode);
+                }
+                break;
+            case 'inv':
+                invMode = !invMode;
+                const invBtn = document.getElementById('android-inv-btn');
+                if (invBtn) invBtn.classList.toggle('active', invMode);
+                updateSciFuncLabels();
+                break;
+            case 'sin': calcExpr += invMode ? 'asin(' : 'sin('; break;
+            case 'cos': calcExpr += invMode ? 'acos(' : 'cos('; break;
+            case 'tan': calcExpr += invMode ? 'atan(' : 'tan('; break;
+            case 'ln':  calcExpr += 'ln('; break;
+            case 'log': calcExpr += 'log('; break;
+        }
+        updateCalcDisplay();
+    }
+
+    function updateSciFuncLabels() {
+        const btns = document.querySelectorAll('#android-keypad-scientific .android-btn.sci');
+        btns.forEach(btn => {
+            const t = btn.textContent.trim();
+            if (t === 'sin' || t === 'sin⁻¹') btn.textContent = invMode ? 'sin⁻¹' : 'sin';
+            if (t === 'cos' || t === 'cos⁻¹') btn.textContent = invMode ? 'cos⁻¹' : 'cos';
+            if (t === 'tan' || t === 'tan⁻¹') btn.textContent = invMode ? 'tan⁻¹' : 'tan';
+        });
+    }
+
+    function androidToggleScientific() {
+        androidScientificMode = !androidScientificMode;
+        const normalKb = document.getElementById('android-keypad-normal');
+        const sciKb = document.getElementById('android-keypad-scientific');
+        const chevron = document.getElementById('android-chevron-icon');
+        if (androidScientificMode) {
+            normalKb.style.display = 'none';
+            sciKb.style.display = 'grid';
+            chevron.innerHTML = '<polyline points="7 9 12 4 17 9"/><polyline points="7 15 12 20 17 15"/>';
+        } else {
+            normalKb.style.display = 'grid';
+            sciKb.style.display = 'none';
+            chevron.innerHTML = '<polyline points="7 15 12 20 17 15"/><polyline points="7 9 12 4 17 9"/>';
+        }
+    }
+
+    /* ============================================================
+       HISTORIQUE
+       ============================================================ */
     function toggleCalcHistory() {
-        const panel = document.getElementById('calc-history-panel');
-        if (!panel) return;
-        panel.classList.toggle('open');
-        if (panel.classList.contains('open')) renderCalcHistory();
+        if (activeCalcPlatform === 'android') {
+            const sheet = document.getElementById('android-history-sheet');
+            const trigger = document.getElementById('android-history-trigger');
+            if (!sheet) return;
+            sheet.classList.toggle('open');
+            if (sheet.classList.contains('open')) {
+                renderCalcHistory();
+                if (trigger) trigger.classList.add('history-active');
+            } else if (trigger) trigger.classList.remove('history-active');
+        } else {
+            const panel = document.getElementById('calc-history-panel');
+            if (!panel) return;
+            panel.classList.toggle('open');
+            if (panel.classList.contains('open')) renderCalcHistory();
+        }
     }
 
     function renderCalcHistory() {
-        const list = document.getElementById('calc-history-list');
+        const isAndroid = activeCalcPlatform === 'android';
+        const listId = isAndroid ? 'android-calc-history-list' : 'calc-history-list';
+        const list = document.getElementById(listId);
         if (!list) return;
         if (calcHistory.length === 0) {
-            list.innerHTML = '<div class="calc-history-empty">Aucun historique</div>';
+            list.innerHTML = isAndroid
+                ? '<div class="history-empty">Aucun historique</div>'
+                : '<div class="calc-history-empty">Aucun historique</div>';
             return;
         }
-        list.innerHTML = calcHistory.map((item, i) =>
-            '<div class="calc-history-item" data-idx="' + i + '">' +
-                '<div class="hist-expr">' + item.expr + '</div>' +
-                '<div class="hist-result">' + item.result + '</div>' +
-            '</div>'
-        ).join('');
-        list.querySelectorAll('.calc-history-item').forEach(el => {
-            el.addEventListener('click', () => {
-                const idx = parseInt(el.dataset.idx, 10);
-                useCalcHistoryItem(idx);
-            });
+        list.innerHTML = calcHistory.map((item, i) => {
+            if (isAndroid) {
+                return '<div class="history-item" data-idx="' + i + '">' +
+                            '<div class="h-expr">' + item.expr + '</div>' +
+                            '<div class="h-result">' + formatFR(item.result) + '</div>' +
+                       '</div>';
+            } else {
+                return '<div class="calc-history-item" data-idx="' + i + '">' +
+                            '<div class="hist-expr">' + item.expr + '</div>' +
+                            '<div class="hist-result">' + formatFR(item.result) + '</div>' +
+                       '</div>';
+            }
+        }).join('');
+        list.querySelectorAll('[data-idx]').forEach(el => {
+            el.addEventListener('click', () => useCalcHistoryItem(parseInt(el.dataset.idx, 10)));
         });
     }
 
     function useCalcHistoryItem(i) {
         const item = calcHistory[i];
         if (!item) return;
-        calcCurrent = item.result;
-        justEvaluated = true;
-        lastExpressionText = item.expr;
-        calcPrev = null;
-        currentOperation = null;
-        calcWait = true;
-        const panel = document.getElementById('calc-history-panel');
+        calcExpr = item.expr;
+        calcLastResult = item.result;
+        calcJustEvaluated = true;
+        const isAndroid = activeCalcPlatform === 'android';
+        const panel = document.getElementById(isAndroid ? 'android-history-sheet' : 'calc-history-panel');
         if (panel) panel.classList.remove('open');
+        const trigger = document.getElementById('android-history-trigger');
+        if (trigger) trigger.classList.remove('history-active');
         updateCalcDisplay();
     }
 
@@ -4590,41 +4912,45 @@
 
     function addToCalcHistory(expr, result) {
         if (!expr) return;
-        calcHistory.unshift({ expr: expr, result: result });
+        calcHistory.unshift({ expr, result });
         if (calcHistory.length > 30) calcHistory.pop();
     }
 
-    /* Fermer le panneau historique en cliquant à l'extérieur */
     document.addEventListener('click', (e) => {
+        if (activeCalcPlatform !== 'ios') return;
         const panel = document.getElementById('calc-history-panel');
-        const actionBar = document.querySelector('.calc-action-bar');
         if (!panel || !panel.classList.contains('open')) return;
         if (panel.contains(e.target)) return;
-        if (actionBar && actionBar.contains(e.target)) return;
+        if (e.target.closest('.calc-action-bar')) return;
         panel.classList.remove('open');
     });
 
-    /* ==========================================
-       DÉVERROUILLAGE DE B SUITE
-       ========================================== */
-    function unlockBSuite() {
-        document.getElementById('calculator-disguise').style.display = 'none';
+    function androidShowMenu(event) {
+        if (event) event.stopPropagation();
+        const popup = document.getElementById('android-menu-popup');
+        if (popup) popup.style.display = 'block';
+    }
+    function androidCloseMenu() {
+        const popup = document.getElementById('android-menu-popup');
+        if (popup) popup.style.display = 'none';
+    }
 
+    /* ============================================================
+       DÉVERROUILLAGE B SUITE
+       ============================================================ */
+    function unlockBSuite() {
+        document.getElementById('calculator-disguise-ios').classList.remove('active');
+        document.getElementById('calculator-disguise-android').classList.remove('active');
         const splash = document.getElementById('splash');
         splash.classList.remove('hidden');
-
         document.getElementById('hub').style.display = 'flex';
-
-        setTimeout(() => {
-            splash.classList.add('hidden');
-        }, 1300);
-
+        setTimeout(() => splash.classList.add('hidden'), 1300);
         calcClear();
     }
 
-    /* ==========================================
-       LOGIQUE DE B SUITE
-       ========================================== */
+    /* ============================================================
+       LOGIQUE B SUITE
+       ============================================================ */
     let currentApp = null;
 
     // --- Données explicatives des applications ---
@@ -4683,29 +5009,22 @@
         loader.classList.add('active');
         loaderText.textContent = 'CHARGEMENT...';
 
-        const templateId = 'tpl-' + appName;
-        const template = document.getElementById(templateId);
-
+        const template = document.getElementById('tpl-' + appName);
         if (!template) {
-            console.error('Template introuvable:', templateId);
+            console.error('Template introuvable: tpl-' + appName);
             loaderText.textContent = 'ERREUR: APP INTROUVABLE';
             return;
         }
-
         const htmlContent = template.innerHTML;
         const blob = new Blob([htmlContent], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
-
         homeBtn.classList.add('visible');
 
         iframe.onload = () => {
             URL.revokeObjectURL(url);
             iframe.onload = null;
-            setTimeout(() => {
-                loader.classList.remove('active');
-            }, 200);
+            setTimeout(() => loader.classList.remove('active'), 200);
         };
-
         iframe.src = url;
     }
 
@@ -4714,10 +5033,8 @@
         const iframe = document.getElementById('app-iframe');
         const hub = document.getElementById('hub');
         const homeBtn = document.getElementById('home-btn');
-
         iframe.src = 'about:blank';
         homeBtn.classList.remove('visible');
-
         setTimeout(() => {
             container.classList.remove('active');
             hub.style.display = 'flex';
@@ -4725,8 +5042,10 @@
         }, 100);
     }
 
-    /* Initialisation de l'affichage au chargement */
-    updateCalcDisplay();
+    /* ============================================================
+       INITIALISATION
+       ============================================================ */
+    applyCalcTheme();
 </script>
 </body>
 </html>
