@@ -4361,19 +4361,28 @@
 <!-- ============================================================ -->
 <script>
     /* ============================================================
-       DÉTECTION DE PLATEFORME + THÈME
+       DÉTECTION DE PLATEFORME + THÈME (VERSION CORRIGÉE ET ROBUSTE)
        ============================================================ */
     let activeCalcPlatform = 'ios';
 
     function detectPlatform() {
         const ua = navigator.userAgent || '';
+        const vendor = navigator.vendor || '';
+        const platform = navigator.platform || '';
         const uad = navigator.userAgentData;
-        const isIOS = /iPad|iPhone|iPod/.test(ua) ||
-                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        
+        // Détection iOS (iPhone, iPad, iPod, et iPadOS qui se fait passer pour un Mac)
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || 
+                      (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        
+        // Détection Android (on vérifie partout où c'est possible)
         const isAndroid = !isIOS && (
-            /android/i.test(ua) ||
+            /android/i.test(ua) || 
+            /android/i.test(vendor) || 
+            /android/i.test(platform) ||
             (uad && /android/i.test(uad.platform || ''))
         );
+        
         return { isIOS, isAndroid };
     }
 
@@ -4410,7 +4419,25 @@
     }
 
     function applyCalcTheme() {
-        const { isAndroid } = detectPlatform();
+        // --- AJOUT : Possibilité de forcer la plateforme via l'URL pour tester ---
+        // Exemple : monsite.github.io/?platform=android
+        const urlParams = new URLSearchParams(window.location.search);
+        const forcedPlatform = urlParams.get('platform');
+        
+        let isAndroid;
+        if (forcedPlatform === 'android') {
+            isAndroid = true;
+            console.log("Plateforme forcée sur Android via l'URL");
+        } else if (forcedPlatform === 'ios') {
+            isAndroid = false;
+            console.log("Plateforme forcée sur iOS via l'URL");
+        } else {
+            const detected = detectPlatform();
+            isAndroid = detected.isAndroid;
+            console.log("Plateforme détectée :", isAndroid ? "Android" : "iOS");
+        }
+        // ------------------------------------------------------------------------
+
         activeCalcPlatform = isAndroid ? 'android' : 'ios';
 
         const iosCalc = document.getElementById('calculator-disguise-ios');
@@ -4435,7 +4462,6 @@
 
         updateCalcDisplay();
     }
-
     /* ============================================================
        ÉTAT
        ============================================================ */
