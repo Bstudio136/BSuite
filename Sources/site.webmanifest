@@ -1,7 +1,7 @@
 {
     "name": "Calculatrice",
     "short_name": "Calculatrice",
-    "start_url": "./Calc1.html",
+    "start_url": "./index.html",
     "scope": "./",
     "display": "standalone",
     "orientation": "portrait",
