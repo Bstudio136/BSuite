@@ -1,6 +1,6 @@
 {
   "name": "Calculatrice",
-  "short_name": "B Suite",
+  "short_name": "Calculatrice",
   "description": "Calculatrice",
   "start_url": "../index.html",
   "display": "standalone",
