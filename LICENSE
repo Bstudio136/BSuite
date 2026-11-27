@@ -8,7 +8,7 @@ Copyright (c) 2026 Bstudio136. All rights reserved.
 ENGLISH
 --------------------------------------------------------------------------------
 
-BSuite - Use As-Is Only License
+BSuite - Proprietary with Contribution Exception License
 
 This project (including but not limited to all source code, HTML, CSS,
 JavaScript, assets, images, documentation, and any other files contained in
@@ -23,14 +23,18 @@ You ARE allowed to:
      purposes.
   2. View the source code on GitHub for informational and educational
      purposes only.
+  3. Contribute to the improvement of the software (e.g., reporting bugs, 
+     suggesting features, or submitting pull requests) exclusively through the 
+     official repository.
 
 PROHIBITED USE
 
 You are NOT allowed to:
 
-  1. Copy, download, reproduce, or duplicate any part of this project.
+  1. Copy, download, reproduce, or duplicate any part of this project for your 
+     own personal or commercial use.
   2. Modify, adapt, translate, fork, merge, or create derivative works based
-     on any part of this project.
+     on any part of this project for your own use or distribution.
   3. Redistribute, publish, sublicense, sell, rent, lease, or otherwise
      transfer any part of this project.
   4. Reuse any portion of the source code (HTML, CSS, JavaScript, assets,
@@ -38,6 +42,15 @@ You are NOT allowed to:
   5. Claim authorship of this project or any part of it.
   6. Remove, alter, or obscure any copyright notice, author attribution, or
      license notice contained in the files.
+
+CONTRIBUTIONS
+
+By submitting a contribution (pull request, code snippet, or suggestion) to the 
+official repository, you agree that all rights, title, and interest in the 
+contribution become the exclusive property of the Author (Bstudio136). 
+
+Any use of the software outside the official repository requires explicit, 
+written permission from the Author.
 
 NO WARRANTY
 
@@ -62,7 +75,7 @@ form of authorization, please contact the Author:
 FRANÇAIS
 --------------------------------------------------------------------------------
 
-BSuite - Licence d'utilisation telle quelle uniquement
+BSuite - Licence Propriétaire avec Exception de Contribution
 
 Ce projet (y compris, mais sans s'y limiter, l'intégralité du code source, du
 HTML, du CSS, du JavaScript, des ressources, des images, de la documentation
@@ -78,14 +91,19 @@ Vous êtes autorisé à :
      non commerciales.
   2. Consulter le code source sur GitHub à des fins informatives et
      éducatives uniquement.
+  3. Contribuer à l'amélioration du logiciel (par exemple, signaler des bugs, 
+     suggérer des fonctionnalités ou soumettre des pull requests) exclusivement 
+     via le dépôt officiel.
 
 UTILISATION INTERDITE
 
 Il est formellement interdit de :
 
-  1. Copier, télécharger, reproduire ou dupliquer toute partie de ce projet.
+  1. Copier, télécharger, reproduire ou dupliquer toute partie de ce projet 
+     pour votre propre usage personnel ou commercial.
   2. Modifier, adapter, traduire, forker, fusionner ou créer des œuvres
-     dérivées à partir de toute partie de ce projet.
+     dérivées à partir de toute partie de ce projet pour votre propre usage ou 
+     distribution.
   3. Redistribuer, publier, sous-licencier, vendre, louer, prêter ou
      transférer de quelque manière que ce soit toute partie de ce projet.
   4. Réutiliser toute portion du code source (HTML, CSS, JavaScript,
@@ -94,6 +112,15 @@ Il est formellement interdit de :
   5. Revendiquer la paternité de ce projet ou de l'une de ses parties.
   6. Supprimer, altérer ou masquer toute mention de copyright, attribution
      d'auteur ou mention de licence contenue dans les fichiers.
+
+CONTRIBUTIONS
+
+En soumettant une contribution (pull request, extrait de code ou suggestion) au 
+dépôt officiel, vous acceptez que tous les droits, titres et intérêts sur la 
+contribution deviennent la propriété exclusive de l'Auteur (Bstudio136).
+
+Toute utilisation du logiciel en dehors du dépôt officiel nécessite une 
+autorisation écrite explicite de l'Auteur.
 
 ABSENCE DE GARANTIE
 
