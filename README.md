@@ -15,6 +15,8 @@
 > A **security toolkit** hidden behind a **fake calculator**.
 > One HTML file, no build step, no server — everything runs locally.
 
+![License-Proprietary](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)
+
 ---
 
 ## 🔗 Live Demo
@@ -170,28 +172,29 @@ Result:    → B SUITE
 
 ---
 
-## 📄 License — Use As-Is Only
+## 📄 License — Proprietary with Contribution Exception
 
 **Copyright © 2026 Bstudio136. All rights reserved.**
 
-This project is provided **"AS IS"** and may be used **only in its original, unmodified form**.
+This project is the personal property of the author. 
 
 **You ARE allowed to:**
 - ✅ Use the deployed tool as-is (via the official GitHub Pages link) for personal purposes.
-- ✅ View the source code on GitHub for informational purposes.
+- ✅ View the source code on GitHub for informational and educational purposes.
+- ✅ **Contribute to improving the project** (via pull requests, bug reports, or feature suggestions) exclusively through the official repository.
 
 **You are NOT allowed to:**
-- ❌ Copy, download, reproduce, or duplicate any part of this project.
-- ❌ Modify, adapt, translate, fork, or create derivative works of any part of it.
+- ❌ Copy, download, reproduce, or duplicate any part of this project for your own personal or commercial use.
+- ❌ Modify, adapt, translate, fork, or create derivative works of any part of it for personal use or distribution.
 - ❌ Redistribute, publish, sublicense, sell, rent, or lease any part of it.
 - ❌ Reuse any portion of the source code (HTML, CSS, JS, assets) in another project.
 - ❌ Claim authorship or remove/alter copyright notices.
 
+**Contributions:** By submitting a contribution (pull request, code snippet, or suggestion) to the official repository, you agree that all rights, title, and interest in the contribution become the exclusive property of the author (Bstudio136).
+
 **No warranty:** The software is provided without warranty of any kind, express or implied. The author is not liable for any damage or data loss resulting from its use.
 
-Any unauthorized use is strictly prohibited and may result in legal action.
-
-For any request (commercial use, partnership, etc.), **contact the author**: [@Bstudio136](https://github.com/Bstudio136).
+Any unauthorized use is strictly prohibited and may result in legal action. For any request (commercial use, partnership, etc.), **contact the author**: [@Bstudio136](https://github.com/Bstudio136).
 
 ---
 
@@ -218,6 +221,8 @@ For any request (commercial use, partnership, etc.), **contact the author**: [@B
 
 > Une **suite d'outils de sécurité** entièrement locale, cachée derrière une **calculatrice factice**.
 > Un seul fichier HTML, aucune dépendance de build, aucune donnée envoyée sur un serveur.
+
+![License-Proprietary](https://img.shields.io/badge/License-Proprietary-red?style=for-the-badge)
 
 ---
 
@@ -374,28 +379,29 @@ Résultat :  → B SUITE
 
 ---
 
-## 📄 Licence — Utilisation telle quelle uniquement
+## 📄 Licence — Propriétaire avec Exception de Contribution
 
 **Copyright © 2026 Bstudio136. Tous droits réservés.**
 
-Ce projet est fourni **« EN L'ÉTAT »** et ne peut être utilisé **que dans sa forme originale et non modifiée**.
+Ce projet est la propriété personnelle de l'auteur.
 
 **Vous êtes autorisé à :**
 - ✅ Utiliser l'outil tel quel (via le lien officiel GitHub Pages) à des fins personnelles.
-- ✅ Consulter le code source sur GitHub à des fins informatives.
+- ✅ Consulter le code source sur GitHub à des fins informatives et éducatives.
+- ✅ **Contribuer à l'amélioration du projet** (via des pull requests, rapports de bugs ou suggestions de fonctionnalités) exclusivement via le dépôt officiel.
 
 **Il est formellement interdit de :**
-- ❌ Copier, télécharger, reproduire ou dupliquer toute partie de ce projet.
-- ❌ Modifier, adapter, traduire, forker ou créer des œuvres dérivées.
+- ❌ Copier, télécharger, reproduire ou dupliquer toute partie de ce projet pour votre propre usage personnel ou commercial.
+- ❌ Modifier, adapter, traduire, forker ou créer des œuvres dérivées pour votre propre usage ou distribution.
 - ❌ Redistribuer, publier, sous-licencier, vendre, louer ou prêter toute partie de ce projet.
 - ❌ Réutiliser toute portion du code source (HTML, CSS, JS, ressources) dans un autre projet.
 - ❌ Revendiquer la paternité ou supprimer/modifier les mentions de copyright.
 
+**Contributions :** En soumettant une contribution (pull request, extrait de code ou suggestion) au dépôt officiel, vous acceptez que tous les droits, titres et intérêts sur la contribution deviennent la propriété exclusive de l'auteur (Bstudio136).
+
 **Aucune garantie :** Le logiciel est fourni sans garantie d'aucune sorte, expresse ou implicite. L'auteur ne saurait être tenu responsable de tout dommage ou perte de données résultant de son utilisation.
 
-Toute utilisation non autorisée est strictement interdite et pourra faire l'objet de poursuites.
-
-Pour toute demande (usage commercial, partenariat, etc.), **contactez l'auteur** : [@Bstudio136](https://github.com/Bstudio136).
+Toute utilisation non autorisée est strictement interdite et pourra faire l'objet de poursuites. Pour toute demande (usage commercial, partenariat, etc.), **contactez l'auteur** : [@Bstudio136](https://github.com/Bstudio136).
 
 ---
 
